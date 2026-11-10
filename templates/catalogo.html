@@ -1,0 +1,102 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Catálogo - Urban Motion{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- SIDEBAR FILTROS -->
+        <div class="col-lg-3 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h6 class="mb-0"><i class="bi bi-funnel"></i> Filtros</h6>
+                </div>
+                <div class="card-body">
+                    <!-- Búsqueda -->
+                    <form action="{% url 'catalogo' %}" method="get">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Buscar</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm" name="q" value="{{ busqueda }}" placeholder="Nombre del producto...">
+                                <button class="btn btn-warning btn-sm" type="submit"><i class="bi bi-search"></i></button>
+                            </div>
+                        </div>
+                        <!-- Categorías -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold small">Categoría</label>
+                            <div class="list-group list-group-flush">
+                                <a href="{% url 'catalogo' %}{% if busqueda %}?q={{ busqueda }}{% endif %}"
+                                   class="list-group-item list-group-item-action py-2 {% if not categoria_id %}active bg-dark border-dark{% endif %}">
+                                    <i class="bi bi-grid-3x3-gap me-2"></i> Todas
+                                </a>
+                                {% for cat in categorias %}
+                                <a href="{% url 'catalogo' %}?categoria={{ cat.id }}{% if busqueda %}&q={{ busqueda }}{% endif %}"
+                                   class="list-group-item list-group-item-action py-2 {% if categoria_id == cat.id|stringformat:'s' %}active bg-dark border-dark{% endif %}">
+                                    <i class="bi bi-tag me-2"></i> {{ cat.nombre }}
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRILLA DE PRODUCTOS -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0">
+                    {% if busqueda %}
+                        Resultados para "<span class="text-warning">{{ busqueda }}</span>"
+                    {% else %}
+                        Catálogo de Productos
+                    {% endif %}
+                    <span class="badge bg-secondary ms-2">{{ productos|length }}</span>
+                </h4>
+            </div>
+
+            <div class="row g-4">
+                {% for producto in productos %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="card producto-card border-0 shadow-sm h-100">
+                        <div class="producto-img-wrapper">
+                            {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" class="card-img-top" style="height:230px; object-fit:cover;" alt="{{ producto.nombre }}">
+                            {% else %}
+                            <div class="bg-secondary d-flex align-items-center justify-content-center" style="height:230px;">
+                                <i class="bi bi-image text-white" style="font-size:2.5rem;"></i>
+                            </div>
+                            {% endif %}
+                            <div class="producto-overlay">
+                                <a href="{% url 'detalle_producto' producto.pk %}" class="btn btn-warning btn-sm">
+                                    <i class="bi bi-eye"></i> Ver detalle
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <small class="text-muted text-uppercase">{{ producto.categoria.nombre }}</small>
+                            <h6 class="card-title fw-bold mt-1">{{ producto.nombre }}</h6>
+                            <p class="card-text text-muted small flex-grow-1">{{ producto.descripcion|truncatechars:60 }}</p>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="fw-bold fs-5">${{ producto.precio }}</span>
+                                <a href="{% url 'agregar_al_carrito' producto.pk %}" class="btn btn-dark btn-sm">
+                                    <i class="bi bi-cart-plus me-1"></i>Agregar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5 text-muted">
+                    <i class="bi bi-search fs-1"></i>
+                    <h5 class="mt-3">No se encontraron productos</h5>
+                    <p>Probá con otros filtros o <a href="{% url 'catalogo' %}">ver todo el catálogo</a>.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

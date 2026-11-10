@@ -1,0 +1,57 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Consultas - Urban Motion{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="fw-bold mb-4"><i class="bi bi-chat-dots me-2"></i>Consultas Recibidas</h2>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Asunto</th>
+                            <th>Mensaje</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for consulta in consultas %}
+                        <tr>
+                            <td>{{ consulta.id }}</td>
+                            <td><strong>{{ consulta.nombre }}</strong></td>
+                            <td>{{ consulta.email }}</td>
+                            <td>{{ consulta.asunto }}</td>
+                            <td>{{ consulta.mensaje|truncatechars:60 }}</td>
+                            <td>{{ consulta.fecha|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                {% if consulta.respondida %}
+                                <span class="badge bg-success">Respondida</span>
+                                {% else %}
+                                <span class="badge bg-warning text-dark">Pendiente</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">
+                                <i class="bi bi-chat-square-x fs-3"></i>
+                                <p class="mt-2">No hay consultas aún.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

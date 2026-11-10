@@ -1,0 +1,31 @@
+# Entorno virtual
+venv/
+env/
+ENV/
+.env
+
+# Bytecode de Python y caché
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Base de datos local (opcional si preferís que cada uno haga sus migraciones)
+# db.sqlite3
+
+# Archivos estáticos recolectados
+staticfiles/
+
+# Archivos de medios subidos por usuarios (opcional, podés dejar las fotos o excluirlas)
+# media/
+
+# IDEs y editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Sistema operativo
+Thumbs.db
+Desktop.ini
+.DS_Store

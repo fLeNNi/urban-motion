@@ -1,0 +1,80 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Usuarios - Urban Motion{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-people me-2"></i>Gestión de Usuarios</h2>
+            <p class="text-muted mb-0">Total: <strong>{{ usuarios|length }}</strong> usuarios registrados</p>
+        </div>
+        <a href="{% url 'registrarse' %}" class="btn btn-dark">
+            <i class="bi bi-person-plus me-2"></i>Nuevo Usuario
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Nombre</th>
+                            <th>Registro</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in usuarios %}
+                        <tr>
+                            <td>{{ u.id }}</td>
+                            <td>
+                                <i class="bi bi-person-circle me-1 text-muted"></i>
+                                <strong>{{ u.username }}</strong>
+                            </td>
+                            <td>{{ u.email|default:"-" }}</td>
+                            <td>{{ u.get_full_name|default:"-" }}</td>
+                            <td>{{ u.date_joined|date:"d/m/Y" }}</td>
+                            <td>
+                                {% if u.is_superuser %}
+                                <span class="badge bg-danger">Superuser</span>
+                                {% elif u.is_staff %}
+                                <span class="badge bg-warning text-dark">Staff</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Usuario</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if u.is_active %}
+                                <span class="badge bg-success">Activo</span>
+                                {% else %}
+                                <span class="badge bg-danger">Inactivo</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <a href="{% url 'editar_usuario' u.pk %}" class="btn btn-sm btn-warning me-1">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                {% if u != request.user %}
+                                <a href="{% url 'eliminar_usuario' u.pk %}" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

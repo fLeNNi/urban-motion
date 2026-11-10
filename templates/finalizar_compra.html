@@ -1,0 +1,41 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Finalizar Compra - Urban Motion{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <h2 class="fw-bold mb-4"><i class="bi bi-credit-card me-2"></i>Finalizar Compra</h2>
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Dirección de envío</label>
+                            <textarea name="direccion" class="form-control" rows="3" placeholder="Ej: Av. Corrientes 1234, CABA" required></textarea>
+                        </div>
+                        <hr>
+                        <div class="mb-3">
+                            <h6 class="fw-bold">Resumen:</h6>
+                            {% for pid, item in carrito.items %}
+                            <div class="d-flex justify-content-between text-muted small">
+                                <span>{{ item.nombre }} x{{ item.cantidad }}</span>
+                                <span>${{ item.precio }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="d-grid mt-3">
+                            <button type="submit" class="btn btn-dark btn-lg">
+                                <i class="bi bi-check-circle me-2"></i>Confirmar Pedido
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Nosotros - Urban Motion{% endblock %}
+
+{% block content %}
+
+<!-- HERO NOSOTROS -->
+<section class="bg-dark text-white py-5">
+    <div class="container text-center py-4">
+        <h1 class="display-4 fw-bold">Sobre <span class="text-warning">Urban Motion</span></h1>
+        <p class="lead text-muted">Ropa urbana para quienes viven en movimiento</p>
+    </div>
+</section>
+
+<!-- QUIÉNES SOMOS -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-3">¿Quiénes Somos?</h2>
+                <p class="text-muted">
+                    <strong>Urban Motion</strong> nació en 2024 en Buenos Aires como una marca de ropa urbana y streetwear 
+                    pensada para personas activas, creativas y con estilo propio.
+                </p>
+                <p class="text-muted">
+                    Creemos que la ropa es una forma de expresión. Nuestras colecciones combinan comodidad, durabilidad 
+                    y diseño contemporáneo para acompañarte en cada momento del día.
+                </p>
+                <p class="text-muted">
+                    Este proyecto es también el trabajo práctico final del Seminario de TIC, desarrollado con 
+                    <strong>Django + Python</strong>, <strong>Django REST Framework</strong> y <strong>Bootstrap 5</strong>.
+                </p>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="bg-dark rounded-4 p-5 d-inline-block">
+                    <i class="bi bi-lightning-charge-fill text-warning" style="font-size:5rem;"></i>
+                    <h2 class="text-white mt-3 logo-text">URBAN MOTION</h2>
+                    <p class="text-muted">Buenos Aires, Argentina</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- VALORES -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="fw-bold text-center mb-5">Nuestros <span class="text-warning">Valores</span></h2>
+        <div class="row g-4">
+            <div class="col-md-4 text-center">
+                <div class="bg-white rounded-4 shadow-sm p-4 h-100">
+                    <i class="bi bi-award text-warning" style="font-size:2.5rem;"></i>
+                    <h5 class="fw-bold mt-3">Calidad</h5>
+                    <p class="text-muted">Materiales seleccionados y procesos de fabricación responsables para productos que duran.</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="bg-white rounded-4 shadow-sm p-4 h-100">
+                    <i class="bi bi-palette text-warning" style="font-size:2.5rem;"></i>
+                    <h5 class="fw-bold mt-3">Estilo</h5>
+                    <p class="text-muted">Diseños urbanos modernos que reflejan la identidad de nuestra comunidad.</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <div class="bg-white rounded-4 shadow-sm p-4 h-100">
+                    <i class="bi bi-people text-warning" style="font-size:2.5rem;"></i>
+                    <h5 class="fw-bold mt-3">Comunidad</h5>
+                    <p class="text-muted">Construimos una comunidad de personas que comparten la pasión por el movimiento y el streetwear.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TECNOLOGÍAS (para el TP) -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="fw-bold text-center mb-5">Tecnologías del <span class="text-warning">Proyecto</span></h2>
+        <div class="row g-3 justify-content-center">
+            {% for tech in techs %}
+            <div class="col-auto">
+                <span class="badge bg-dark fs-6 px-3 py-2">{{ tech }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <p class="text-muted">Proyecto final del <strong>Seminario de TIC</strong></p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

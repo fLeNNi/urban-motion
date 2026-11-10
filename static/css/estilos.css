@@ -1,0 +1,212 @@
+
+/* ============================================================
+   URBAN MOTION - Estilos principales
+   ============================================================ */
+
+/* Tipografía */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.logo-text {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+}
+
+.letter-spacing {
+    letter-spacing: 3px;
+}
+
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+.hero-section {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255,193,7,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,193,7,0.05) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.hero-overlay {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: 80px 0;
+}
+
+.hero-title {
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 4px;
+    line-height: 0.9;
+    font-size: 5rem;
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.navbar {
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    padding: 12px 0;
+}
+
+.navbar-brand {
+    font-size: 1.3rem;
+}
+
+/* ============================================================
+   TARJETAS DE PRODUCTOS
+   ============================================================ */
+.producto-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px !important;
+    overflow: hidden;
+}
+
+.producto-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+}
+
+.producto-img-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.producto-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.producto-img-wrapper:hover .producto-overlay {
+    opacity: 1;
+}
+
+/* ============================================================
+   TARJETAS DE CATEGORÍA
+   ============================================================ */
+.cat-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px !important;
+}
+
+.cat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12) !important;
+}
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-dark:hover {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #000;
+}
+
+.btn-warning {
+    font-weight: 600;
+}
+
+/* ============================================================
+   CARDS Y FORMULARIOS
+   ============================================================ */
+.card {
+    border-radius: 12px !important;
+}
+
+.form-control:focus {
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.2rem rgba(255,193,7,0.25);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer a:hover {
+    color: #ffc107 !important;
+    transition: color 0.3s;
+}
+
+/* ============================================================
+   BADGES Y ESTADOS
+   ============================================================ */
+.badge {
+    font-weight: 500;
+    border-radius: 6px;
+}
+
+/* ============================================================
+   TABLAS
+   ============================================================ */
+.table th {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-section {
+        min-height: 60vh;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+}
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+.font-monospace {
+    font-family: 'Courier New', monospace;
+}
+
+.text-break {
+    word-break: break-all;
+}
