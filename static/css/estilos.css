@@ -158,9 +158,16 @@ body {
 /* ============================================================
    FOOTER
    ============================================================ */
-footer a:hover {
+.footer-link {
+    color: rgba(255, 255, 255, 0.7) !important;
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+    display: inline-block;
+}
+
+.footer-link:hover {
     color: #ffc107 !important;
-    transition: color 0.3s;
+    transform: translateX(4px);
 }
 
 /* ============================================================

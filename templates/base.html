@@ -45,10 +45,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'contacto' %}"><i class="bi bi-envelope"></i> Contacto</a>
                 </li>
+                {% if user.is_staff %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'productos_api_externa' %}"><i class="bi bi-cloud-arrow-down"></i> API Externa</a>
                 </li>
-                {% if user.is_staff %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                         <i class="bi bi-gear"></i> Admin
@@ -135,43 +135,48 @@
 <footer class="bg-dark text-light py-5 mt-5">
     <div class="container">
         <div class="row g-4">
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-md-6">
                 <h5 class="logo-text mb-3">URBAN <span class="text-warning">MOTION</span></h5>
-                <p class="text-muted">Tu tienda de ropa urbana y streetwear. Calidad y estilo para el movimiento cotidiano.</p>
+                <p class="text-white-50">Tu tienda de ropa urbana y streetwear. Calidad y estilo para el movimiento cotidiano.</p>
                 <div class="d-flex gap-3 mt-3">
                     <a href="#" class="text-warning fs-5"><i class="bi bi-instagram"></i></a>
                     <a href="#" class="text-warning fs-5"><i class="bi bi-facebook"></i></a>
                     <a href="#" class="text-warning fs-5"><i class="bi bi-tiktok"></i></a>
                 </div>
             </div>
-            <div class="col-lg-2">
-                <h6 class="text-warning mb-3">Navegación</h6>
-                <ul class="list-unstyled text-muted">
-                    <li><a href="{% url 'inicio' %}" class="text-muted text-decoration-none">Inicio</a></li>
-                    <li><a href="{% url 'catalogo' %}" class="text-muted text-decoration-none">Catálogo</a></li>
-                    <li><a href="{% url 'nosotros' %}" class="text-muted text-decoration-none">Nosotros</a></li>
-                    <li><a href="{% url 'contacto' %}" class="text-muted text-decoration-none">Contacto</a></li>
+            <div class="col-lg-2 col-md-6 col-6">
+                <h6 class="text-warning mb-3 fw-bold">Navegación</h6>
+                <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+                    <li><a href="{% url 'inicio' %}" class="footer-link">Inicio</a></li>
+                    <li><a href="{% url 'catalogo' %}" class="footer-link">Catálogo</a></li>
+                    <li><a href="{% url 'nosotros' %}" class="footer-link">Nosotros</a></li>
+                    <li><a href="{% url 'contacto' %}" class="footer-link">Contacto</a></li>
                 </ul>
             </div>
-            <div class="col-lg-3">
-                <h6 class="text-warning mb-3">Mi Cuenta</h6>
-                <ul class="list-unstyled text-muted">
-                    <li><a href="{% url 'registrarse' %}" class="text-muted text-decoration-none">Crear cuenta</a></li>
-                    <li><a href="{% url 'loguearse' %}" class="text-muted text-decoration-none">Iniciar sesión</a></li>
-                    <li><a href="{% url 'mi_perfil' %}" class="text-muted text-decoration-none">Mi perfil</a></li>
-                    <li><a href="{% url 'ver_carrito' %}" class="text-muted text-decoration-none">Carrito</a></li>
+            <div class="col-lg-3 col-md-6 col-6">
+                <h6 class="text-warning mb-3 fw-bold">Mi Cuenta</h6>
+                <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'mi_perfil' %}" class="footer-link">Mi perfil</a></li>
+                    <li><a href="{% url 'ver_carrito' %}" class="footer-link">Ver Carrito</a></li>
+                    <li><a href="{% url 'desloguearse' %}" class="footer-link text-danger">Cerrar sesión</a></li>
+                    {% else %}
+                    <li><a href="{% url 'loguearse' %}" class="footer-link">Iniciar sesión</a></li>
+                    <li><a href="{% url 'registrarse' %}" class="footer-link">Crear cuenta</a></li>
+                    <li><a href="{% url 'ver_carrito' %}" class="footer-link">Ver Carrito</a></li>
+                    {% endif %}
                 </ul>
             </div>
-            <div class="col-lg-3">
-                <h6 class="text-warning mb-3">Contacto</h6>
-                <p class="text-muted"><i class="bi bi-geo-alt"></i> Buenos Aires, Argentina</p>
-                <p class="text-muted"><i class="bi bi-envelope"></i> info@urbanmotion.com.ar</p>
-                <p class="text-muted"><i class="bi bi-telephone"></i> (011) 4000-0000</p>
+            <div class="col-lg-3 col-md-6">
+                <h6 class="text-warning mb-3 fw-bold">Contacto</h6>
+                <p class="text-white-50 mb-2"><i class="bi bi-geo-alt text-warning me-2"></i>Buenos Aires, Argentina</p>
+                <p class="text-white-50 mb-2"><i class="bi bi-envelope text-warning me-2"></i>info@urbanmotion.com.ar</p>
+                <p class="text-white-50 mb-0"><i class="bi bi-telephone text-warning me-2"></i>(011) 4000-0000</p>
             </div>
         </div>
-        <hr class="border-secondary mt-4">
-        <div class="text-center text-muted">
-            <small>&copy; 2024 Urban Motion. Todos los derechos reservados. | Proyecto Seminario TIC</small>
+        <hr class="border-secondary mt-4 mb-3">
+        <div class="text-center text-white-50 small">
+            &copy; 2024 Urban Motion. Todos los derechos reservados. | Proyecto Seminario TIC
         </div>
     </div>
 </footer>

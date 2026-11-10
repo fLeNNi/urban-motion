@@ -120,22 +120,24 @@
     </div>
 </section>
 
-<!-- BANNER API EXTERNA -->
+{% if user.is_staff %}
+<!-- BANNER API EXTERNA (SOLO VISIBLE PARA DOCENTES / ADMIN) -->
 <section class="py-5 bg-dark text-white">
     <div class="container">
         <div class="row align-items-center g-4">
             <div class="col-lg-6">
+                <span class="badge bg-warning text-dark mb-2">Panel de Demostración</span>
                 <h2 class="fw-bold">Productos desde <span class="text-warning">API Externa</span></h2>
-                <p class="text-muted">También podés consultar productos de otras fuentes directamente desde nuestra API REST.</p>
-                <a href="/api/productos-externos/" class="btn btn-warning me-2" target="_blank">
-                    <i class="bi bi-cloud-download me-2"></i>Ver API
+                <p class="text-muted">Consulta en vivo e importación de productos desde FakeStore API a la base de datos de Urban Motion.</p>
+                <a href="{% url 'productos_api_externa' %}" class="btn btn-warning me-2">
+                    <i class="bi bi-cloud-download me-2"></i>Explorar e Importar
                 </a>
                 <a href="/api/" class="btn btn-outline-light" target="_blank">
-                    <i class="bi bi-code-slash me-2"></i>Documentación API
+                    <i class="bi bi-code-slash me-2"></i>Endpoints DRF
                 </a>
             </div>
             <div class="col-lg-6 text-center">
-                <i class="bi bi-diagram-3 text-warning" style="font-size:5rem;"></i>
+                <i class="bi bi-diagram-3 text-warning" style="font-size:4.5rem;"></i>
                 <div class="mt-3">
                     <code class="text-warning">GET /api/productos-externos/</code>
                 </div>
@@ -143,6 +145,7 @@
         </div>
     </div>
 </section>
+{% endif %}
 
 <!-- BANNER REGISTRO -->
 {% if not user.is_authenticated %}
