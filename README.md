@@ -1,5 +1,5 @@
 
-# 🚀 Urban Motion - Tienda de Ropa Urbana
+# Urban Motion - Tienda de Ropa Urbana
 
 Proyecto final del **Seminario de TIC** | Escuela Técnica - Buenos Aires
 
@@ -10,21 +10,6 @@ Proyecto final del **Seminario de TIC** | Escuela Técnica - Buenos Aires
 - **Frontend:** HTML5 + Bootstrap 5 + Django Templates
 - **Base de Datos:** SQLite3
 - **Autenticación:** Django Auth + Token Auth (DRF)
-
----
-
-## Requisitos cumplidos del TP
-
-| # | Requisito | Estado |
-|---|-----------|--------|
-| 1 | Formulario Registro de usuario | ✅ `/registro/` |
-| 2 | Página de usuarios registrados con CRUD | ✅ `/usuarios/` |
-| 3 | Consulta a una API (mostrar productos) | ✅ `/api/productos-externos/` |
-| 4 | Formulario Ingreso (Login) | ✅ `/login/` |
-| 5 | Formulario de consultas | ✅ `/contacto/` |
-| 6 | Página de la empresa (nosotros) | ✅ `/nosotros/` |
-| 7 | Mostrar Token de usuarios | ✅ `/perfil/` |
-| 8 | Mostrar Cookies de sesión | ✅ `/perfil/` |
 
 ---
 
