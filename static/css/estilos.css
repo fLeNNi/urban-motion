@@ -26,6 +26,21 @@ body {
     color: var(--um-text-main);
 }
 
+/* Forzar legibilidad y contraste en textos secundarios */
+.text-muted {
+    color: #A9B0B8 !important;
+}
+
+.text-white-50 {
+    color: #C0C5CC !important;
+}
+
+.lead-text {
+    color: #DDE2E8;
+    font-size: 1.05rem;
+    line-height: 1.65;
+}
+
 .logo-text {
     font-family: 'Bebas Neue', cursive;
     font-size: 1.8rem;
