@@ -1,128 +1,175 @@
-
 /* ============================================================
-   URBAN MOTION - Estilos principales
+   URBAN MOTION - Sistema de Diseño & Paleta de Colores
+   Inspirado en la identidad U/M:
+   - Primario: Rojo Racing / Carmesí (#E5252A / #D32F2F)
+   - Secundario / Acentos: Blanco & Salmón suave (#FF8A8A / #FFFFFF)
+   - Fondo oscuro: Carbón profundo (#121316 / #1A1C20 / #22252A)
+   - Neutros / Bordes: Gris titanio (#343A40 / #2D3136)
    ============================================================ */
 
-/* Tipografía */
+:root {
+    --um-primary: #E5252A;
+    --um-primary-hover: #C41C20;
+    --um-primary-glow: rgba(229, 37, 42, 0.25);
+    --um-salmon: #FF7B7B;
+    --um-dark-bg: #121316;
+    --um-dark-surface: #1A1C20;
+    --um-dark-card: #202328;
+    --um-dark-border: #2E3238;
+    --um-text-main: #F4F5F7;
+    --um-text-muted: #9BA1A6;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
+    background-color: var(--um-dark-bg);
+    color: var(--um-text-main);
 }
 
 .logo-text {
     font-family: 'Bebas Neue', cursive;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     letter-spacing: 2px;
 }
 
-.letter-spacing {
-    letter-spacing: 3px;
+.logo-img {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+    transition: transform 0.25s ease;
 }
 
-/* ============================================================
-   HERO SECTION
-   ============================================================ */
-.hero-section {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    min-height: 85vh;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
+.logo-img:hover {
+    transform: scale(1.06);
 }
 
-.hero-section::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(255,193,7,0.08) 0%, transparent 70%);
-    border-radius: 50%;
+.text-danger, .text-warning {
+    color: var(--um-primary) !important;
 }
 
-.hero-section::after {
-    content: '';
-    position: absolute;
-    bottom: -30%;
-    left: -10%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255,193,7,0.05) 0%, transparent 70%);
-    border-radius: 50%;
-}
-
-.hero-overlay {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    padding: 80px 0;
-}
-
-.hero-title {
-    font-family: 'Bebas Neue', cursive;
-    letter-spacing: 4px;
-    line-height: 0.9;
-    font-size: 5rem;
+.bg-warning {
+    background-color: var(--um-primary) !important;
+    color: #FFFFFF !important;
 }
 
 /* ============================================================
    NAVBAR
    ============================================================ */
 .navbar {
-    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
-    padding: 12px 0;
+    background-color: var(--um-dark-surface) !important;
+    border-bottom: 1px solid var(--um-dark-border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    padding: 10px 0;
 }
 
-.navbar-brand {
-    font-size: 1.3rem;
+.navbar .nav-link {
+    color: #C0C5CB !important;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.navbar .nav-link:hover, .navbar .nav-link.active {
+    color: var(--um-primary) !important;
+}
+
+.navbar .btn-outline-warning {
+    color: var(--um-primary);
+    border-color: var(--um-primary);
+}
+
+.navbar .btn-outline-warning:hover {
+    background-color: var(--um-primary);
+    border-color: var(--um-primary);
+    color: #FFF;
+}
+
+.navbar .btn-warning {
+    background-color: var(--um-primary);
+    border-color: var(--um-primary);
+    color: #FFF;
+}
+
+.navbar .btn-warning:hover {
+    background-color: var(--um-primary-hover);
+    border-color: var(--um-primary-hover);
+    color: #FFF;
 }
 
 /* ============================================================
-   TARJETAS DE PRODUCTOS
+   HERO BANNER
    ============================================================ */
-.producto-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 12px !important;
-    overflow: hidden;
+.hero-section {
+    background: radial-gradient(circle at 80% 20%, rgba(229, 37, 42, 0.15) 0%, transparent 50%),
+                linear-gradient(135deg, #101114 0%, #17181D 60%, #1F2127 100%);
+    min-height: 82vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-bottom: 1px solid var(--um-dark-border);
 }
 
-.producto-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+.hero-title {
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 3px;
+    line-height: 0.95;
+    font-size: 5rem;
+    color: #FFFFFF;
+}
+
+.hero-subtitle {
+    letter-spacing: 3px;
+    color: var(--um-primary);
+    font-weight: 600;
+}
+
+/* ============================================================
+   TARJETAS Y SUPERFICIES (CARDS)
+   ============================================================ */
+.card, .producto-card, .cat-card {
+    background-color: var(--um-dark-card) !important;
+    color: var(--um-text-main);
+    border: 1px solid var(--um-dark-border) !important;
+    border-radius: 14px !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card:hover, .producto-card:hover, .cat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(229, 37, 42, 0.45) !important;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.card-header {
+    background-color: var(--um-dark-surface) !important;
+    border-bottom: 1px solid var(--um-dark-border) !important;
+    color: #FFFFFF !important;
 }
 
 .producto-img-wrapper {
     position: relative;
     overflow: hidden;
+    background-color: #16181C;
 }
 
 .producto-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(18, 19, 22, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.25s ease;
 }
 
 .producto-img-wrapper:hover .producto-overlay {
     opacity: 1;
 }
 
-/* ============================================================
-   TARJETAS DE CATEGORÍA
-   ============================================================ */
-.cat-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-radius: 12px !important;
-}
-
-.cat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.12) !important;
+/* Secciones de fondo claro reemplazadas por superficies oscuras elegantes */
+.bg-light {
+    background-color: #17191D !important;
 }
 
 /* ============================================================
@@ -130,62 +177,138 @@ body {
    ============================================================ */
 .btn {
     border-radius: 8px;
-    font-weight: 500;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-warning, .btn-primary {
+    background-color: var(--um-primary) !important;
+    border-color: var(--um-primary) !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 14px var(--um-primary-glow);
+}
+
+.btn-warning:hover, .btn-primary:hover {
+    background-color: var(--um-primary-hover) !important;
+    border-color: var(--um-primary-hover) !important;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+}
+
+.btn-outline-warning, .btn-outline-light {
+    border-color: #454B54;
+    color: var(--um-text-main);
+}
+
+.btn-outline-warning:hover, .btn-outline-light:hover {
+    background-color: var(--um-primary);
+    border-color: var(--um-primary);
+    color: #FFFFFF;
+}
+
+.btn-dark {
+    background-color: #2A2E35;
+    border-color: #363B43;
+    color: #FFFFFF;
 }
 
 .btn-dark:hover {
-    background-color: #ffc107;
-    border-color: #ffc107;
-    color: #000;
-}
-
-.btn-warning {
-    font-weight: 600;
+    background-color: var(--um-primary);
+    border-color: var(--um-primary);
+    color: #FFFFFF;
 }
 
 /* ============================================================
-   CARDS Y FORMULARIOS
+   FORMULARIOS
    ============================================================ */
-.card {
-    border-radius: 12px !important;
+.form-control, .form-select {
+    background-color: #16181C !important;
+    border: 1px solid var(--um-dark-border) !important;
+    color: var(--um-text-main) !important;
+    border-radius: 8px;
 }
 
-.form-control:focus {
-    border-color: #ffc107;
-    box-shadow: 0 0 0 0.2rem rgba(255,193,7,0.25);
+.form-control:focus, .form-select:focus {
+    border-color: var(--um-primary) !important;
+    box-shadow: 0 0 0 0.25rem var(--um-primary-glow) !important;
+}
+
+.form-control::placeholder {
+    color: #6C727A !important;
+}
+
+.form-label {
+    color: #C0C5CB;
+    font-weight: 500;
+}
+
+/* List group (filtros de catálogo) */
+.list-group-item {
+    background-color: var(--um-dark-card);
+    border-color: var(--um-dark-border);
+    color: #C0C5CB;
+}
+
+.list-group-item:hover {
+    background-color: #272B31;
+    color: var(--um-primary);
+}
+
+.list-group-item.active {
+    background-color: var(--um-primary) !important;
+    border-color: var(--um-primary) !important;
+    color: #FFFFFF !important;
+}
+
+/* ============================================================
+   TABLAS
+   ============================================================ */
+.table {
+    color: var(--um-text-main);
+    border-color: var(--um-dark-border);
+}
+
+.table-hover tbody tr:hover {
+    background-color: #262930;
+    color: var(--um-text-main);
+}
+
+.table-dark {
+    background-color: var(--um-dark-surface);
+    border-color: var(--um-dark-border);
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.badge.bg-warning {
+    background-color: var(--um-primary) !important;
+    color: #FFF !important;
+}
+
+.badge.bg-secondary {
+    background-color: #363B43 !important;
+    color: #DDE1E5 !important;
 }
 
 /* ============================================================
    FOOTER
    ============================================================ */
+footer {
+    background-color: var(--um-dark-surface) !important;
+    border-top: 1px solid var(--um-dark-border);
+}
+
 .footer-link {
-    color: rgba(255, 255, 255, 0.7) !important;
+    color: #9BA1A6 !important;
     text-decoration: none;
     transition: color 0.2s ease, transform 0.2s ease;
     display: inline-block;
 }
 
 .footer-link:hover {
-    color: #ffc107 !important;
+    color: var(--um-primary) !important;
     transform: translateX(4px);
-}
-
-/* ============================================================
-   BADGES Y ESTADOS
-   ============================================================ */
-.badge {
-    font-weight: 500;
-    border-radius: 6px;
-}
-
-/* ============================================================
-   TABLAS
-   ============================================================ */
-.table th {
-    font-weight: 600;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 /* ============================================================
@@ -193,27 +316,6 @@ body {
    ============================================================ */
 @media (max-width: 768px) {
     .hero-title {
-        font-size: 3rem;
+        font-size: 3.2rem;
     }
-
-    .hero-section {
-        min-height: 60vh;
-    }
-}
-
-@media (max-width: 576px) {
-    .hero-title {
-        font-size: 2.5rem;
-    }
-}
-
-/* ============================================================
-   UTILIDADES
-   ============================================================ */
-.font-monospace {
-    font-family: 'Courier New', monospace;
-}
-
-.text-break {
-    word-break: break-all;
 }
