@@ -389,7 +389,7 @@ def eliminar_producto(request, pk):
 
 
 def productos_api_externa(request):
-    """Vista para explorar productos de la FakeStore API e importarlos al catálogo local"""
+    """Vista para explorar productos de ropa desde FakeStore API e importarlos al catálogo local"""
     import urllib.request
     import json
     
@@ -397,10 +397,21 @@ def productos_api_externa(request):
     error = None
 
     try:
-        url = 'https://fakestoreapi.com/products'
-        req = urllib.request.Request(url, headers={'User-Agent': 'UrbanMotion/1.0'})
-        with urllib.request.urlopen(req, timeout=6) as response:
-            productos_externos = json.loads(response.read().decode())
+        # Obtenemos productos de ropa de hombre y de mujer exclusivamente
+        headers = {'User-Agent': 'UrbanMotion/1.0'}
+        url_men = 'https://fakestoreapi.com/products/category/men%27s%20clothing'
+        url_women = 'https://fakestoreapi.com/products/category/women%27s%20clothing'
+
+        req_men = urllib.request.Request(url_men, headers=headers)
+        with urllib.request.urlopen(req_men, timeout=6) as response:
+            prods_men = json.loads(response.read().decode())
+
+        req_women = urllib.request.Request(url_women, headers=headers)
+        with urllib.request.urlopen(req_women, timeout=6) as response:
+            prods_women = json.loads(response.read().decode())
+
+        # Unimos ambas listas para tener solo indumentaria
+        productos_externos = prods_men + prods_women
     except Exception as e:
         error = f"Error al consultar la API externa: {str(e)}"
 

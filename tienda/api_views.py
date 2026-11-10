@@ -90,15 +90,24 @@ def obtener_token(request):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def api_productos_externo(request):
-    """Consulta a API externa de productos (fakestoreapi)"""
+    """Consulta a API externa de productos (ropa en fakestoreapi)"""
     import urllib.request
     import json
     try:
-        url = 'https://fakestoreapi.com/products?limit=12'
-        req = urllib.request.Request(url, headers={'User-Agent': 'UrbanMotion/1.0'})
-        with urllib.request.urlopen(req, timeout=5) as response:
-            data = json.loads(response.read().decode())
-        return Response({'fuente': 'fakestoreapi.com', 'productos': data})
+        headers = {'User-Agent': 'UrbanMotion/1.0'}
+        url_men = 'https://fakestoreapi.com/products/category/men%27s%20clothing'
+        url_women = 'https://fakestoreapi.com/products/category/women%27s%20clothing'
+
+        req_men = urllib.request.Request(url_men, headers=headers)
+        with urllib.request.urlopen(req_men, timeout=5) as resp_m:
+            prods_men = json.loads(resp_m.read().decode())
+
+        req_women = urllib.request.Request(url_women, headers=headers)
+        with urllib.request.urlopen(req_women, timeout=5) as resp_w:
+            prods_women = json.loads(resp_w.read().decode())
+
+        data = prods_men + prods_women
+        return Response({'fuente': 'fakestoreapi.com (ropa/indumentaria)', 'productos': data})
     except Exception as e:
         return Response({'error': str(e), 'mensaje': 'No se pudo conectar a la API externa'}, 
                         status=status.HTTP_503_SERVICE_UNAVAILABLE)
