@@ -6,45 +6,56 @@
 
 {% block content %}
 <div class="container py-5">
-    <h2 class="fw-bold mb-4"><i class="bi bi-cart3 me-2"></i>Mi Carrito</h2>
+    <h2 class="fw-bold mb-4 text-white"><i class="bi bi-cart3 me-2 text-danger"></i>Mi Carrito</h2>
 
     {% if items %}
     <div class="row g-4">
         <div class="col-lg-8">
-            <div class="card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm" style="background-color: #1A1C20 !important; border: 1px solid #2E3238 !important;">
                 <div class="card-body p-0">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-dark">
+                    <table class="table mb-0 align-middle" style="background: transparent;">
+                        <thead style="background-color: #121316; border-bottom: 2px solid #2E3238;">
                             <tr>
-                                <th style="color: #fff;">Producto</th>
-                                <th class="text-center" style="color: #fff;">Precio</th>
-                                <th class="text-center" style="color: #fff;">Cantidad</th>
-                                <th class="text-center" style="color: #fff;">Subtotal</th>
-                                <th class="text-center" style="color: #fff;">Acción</th>
+                                <th style="color: #FFFFFF; padding: 14px 16px;">Producto</th>
+                                <th class="text-center" style="color: #FFFFFF; padding: 14px;">Precio</th>
+                                <th class="text-center" style="color: #FFFFFF; padding: 14px;">Cantidad</th>
+                                <th class="text-center" style="color: #FFFFFF; padding: 14px;">Subtotal</th>
+                                <th class="text-center" style="color: #FFFFFF; padding: 14px;">Acción</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody style="background-color: #1A1C20;">
                             {% for item in items %}
-                            <tr>
-                                <td>
+                            <tr style="border-bottom: 1px solid #2E3238;">
+                                <td style="padding: 16px;">
                                     <div class="d-flex align-items-center gap-3">
                                         {% if item.imagen %}
-                                        <img src="{{ item.imagen }}" style="width:60px; height:60px; object-fit:cover; border-radius:8px;" alt="{{ item.nombre }}">
+                                        <img src="{{ item.imagen }}" style="width:65px; height:65px; object-fit:cover; border-radius:8px; border: 1px solid #363B43;" alt="{{ item.nombre }}">
                                         {% else %}
-                                        <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="width:60px; height:60px;">
+                                        <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="width:65px; height:65px;">
                                             <i class="bi bi-image text-white"></i>
                                         </div>
                                         {% endif %}
-                                        <strong style="color: #212529;">{{ item.nombre }}</strong>
+                                        <div>
+                                            <strong class="text-white d-block fs-6">{{ item.nombre }}</strong>
+                                            <span class="text-white-50 small">Código: #{{ item.id }}</span>
+                                        </div>
                                     </div>
                                 </td>
-                                <td class="text-center align-middle">${{ item.precio }}</td>
-                                <td class="text-center align-middle">
-                                    <span class="badge bg-dark fs-6">{{ item.cantidad }}</span>
+                                <td class="text-center text-white" style="font-weight: 500;">${{ item.precio }}</td>
+                                <td class="text-center">
+                                    <div class="d-inline-flex align-items-center justify-content-center gap-1 bg-dark px-2 py-1 rounded" style="border: 1px solid #363B43;">
+                                        <a href="{% url 'restar_del_carrito' item.id %}" class="btn btn-sm btn-link text-white p-0 px-1 text-decoration-none" title="Restar una unidad">
+                                            <i class="bi bi-dash-lg" style="font-size: 1.1rem; color: #E5252A;"></i>
+                                        </a>
+                                        <span class="badge bg-transparent text-white px-2 fs-6 fw-bold" style="min-width: 25px;">{{ item.cantidad }}</span>
+                                        <a href="{% url 'agregar_al_carrito' item.id %}" class="btn btn-sm btn-link text-white p-0 px-1 text-decoration-none" title="Sumar una unidad">
+                                            <i class="bi bi-plus-lg" style="font-size: 1.1rem; color: #4ade80;"></i>
+                                        </a>
+                                    </div>
                                 </td>
-                                <td class="text-center align-middle fw-bold">${{ item.subtotal }}</td>
-                                <td class="text-center align-middle">
-                                    <a href="{% url 'eliminar_del_carrito' item.id %}" class="btn btn-danger btn-sm">
+                                <td class="text-center fw-bold" style="color: #E5252A; font-size: 1.05rem;">${{ item.subtotal }}</td>
+                                <td class="text-center">
+                                    <a href="{% url 'eliminar_del_carrito' item.id %}" class="btn btn-outline-danger btn-sm" title="Quitar del carrito" style="border-radius: 6px;">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
@@ -55,7 +66,7 @@
                 </div>
             </div>
             <div class="mt-3 d-flex gap-2">
-                <a href="{% url 'catalogo' %}" class="btn btn-outline-dark">
+                <a href="{% url 'catalogo' %}" class="btn btn-outline-light">
                     <i class="bi bi-arrow-left me-1"></i>Seguir comprando
                 </a>
                 <a href="{% url 'vaciar_carrito' %}" class="btn btn-outline-danger">
@@ -66,29 +77,29 @@
 
         <!-- RESUMEN -->
         <div class="col-lg-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-dark text-white">
-                    <h6 class="mb-0">Resumen del pedido</h6>
+            <div class="card border-0 shadow-sm" style="background-color: #1A1C20 !important; border: 1px solid #2E3238 !important;">
+                <div class="card-header text-white" style="background-color: #121316 !important; border-bottom: 1px solid #2E3238 !important;">
+                    <h6 class="mb-0 fw-bold">Resumen del pedido</h6>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-4">
                     {% for item in items %}
-                    <div class="d-flex justify-content-between text-muted small mb-1">
+                    <div class="d-flex justify-content-between text-white-50 small mb-2">
                         <span>{{ item.nombre }} x{{ item.cantidad }}</span>
-                        <span>${{ item.subtotal }}</span>
+                        <span class="text-white">${{ item.subtotal }}</span>
                     </div>
                     {% endfor %}
-                    <hr>
-                    <div class="d-flex justify-content-between fw-bold fs-5">
-                        <span>Total</span>
-                        <span class="text-warning">${{ total }}</span>
+                    <hr style="border-color: #2E3238;">
+                    <div class="d-flex justify-content-between fw-bold fs-5 my-3">
+                        <span class="text-white">Total</span>
+                        <span class="text-danger" style="font-size: 1.4rem;">${{ total }}</span>
                     </div>
                     <div class="d-grid mt-4">
                         {% if user.is_authenticated %}
-                        <a href="{% url 'finalizar_compra' %}" class="btn btn-dark btn-lg">
+                        <a href="{% url 'finalizar_compra' %}" class="btn btn-danger btn-lg fw-bold" style="background-color: #E5252A; border-color: #E5252A;">
                             <i class="bi bi-credit-card me-2"></i>Finalizar compra
                         </a>
                         {% else %}
-                        <a href="{% url 'loguearse' %}" class="btn btn-warning btn-lg">
+                        <a href="{% url 'loguearse' %}" class="btn btn-danger btn-lg fw-bold" style="background-color: #E5252A; border-color: #E5252A;">
                             <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión para comprar
                         </a>
                         {% endif %}
@@ -99,11 +110,11 @@
     </div>
 
     {% else %}
-    <div class="text-center py-5 text-muted">
-        <i class="bi bi-cart-x" style="font-size:5rem;"></i>
-        <h4 class="mt-4">Tu carrito está vacío</h4>
-        <p>Explorá el catálogo y agregá productos</p>
-        <a href="{% url 'catalogo' %}" class="btn btn-dark btn-lg mt-2">
+    <div class="text-center py-5 text-white-50">
+        <i class="bi bi-cart-x text-white-50" style="font-size:5rem;"></i>
+        <h4 class="mt-4 text-white">Tu carrito está vacío</h4>
+        <p class="text-white-50">Explorá el catálogo y agregá productos</p>
+        <a href="{% url 'catalogo' %}" class="btn btn-danger btn-lg mt-2 fw-bold" style="background-color: #E5252A; border-color: #E5252A;">
             <i class="bi bi-grid me-2"></i>Ver Catálogo
         </a>
     </div>

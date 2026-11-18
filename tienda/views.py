@@ -229,12 +229,27 @@ def agregar_al_carrito(request, pk):
 
 
 def eliminar_del_carrito(request, pid):
-    """Eliminar producto del carrito"""
+    """Eliminar producto del carrito (elimina el ítem por completo)"""
     carrito = request.session.get('carrito', {})
     if str(pid) in carrito:
         del carrito[str(pid)]
         request.session['carrito'] = carrito
         messages.info(request, 'Producto eliminado del carrito.')
+    return redirect('ver_carrito')
+
+
+def restar_del_carrito(request, pid):
+    """Disminuir 1 unidad de un producto en el carrito"""
+    carrito = request.session.get('carrito', {})
+    pid_str = str(pid)
+    if pid_str in carrito:
+        if carrito[pid_str]['cantidad'] > 1:
+            carrito[pid_str]['cantidad'] -= 1
+            request.session['carrito'] = carrito
+        else:
+            del carrito[pid_str]
+            request.session['carrito'] = carrito
+            messages.info(request, 'Producto eliminado del carrito.')
     return redirect('ver_carrito')
 
 
