@@ -26,7 +26,7 @@
                         <tbody style="background-color: #1A1C20;">
                             {% for item in items %}
                             <tr style="border-bottom: 1px solid #2E3238;">
-                                <td style="padding: 16px;">
+                                <td style="padding: 16px; background-color: #1A1C20 !important; color: #FFFFFF !important;">
                                     <div class="d-flex align-items-center gap-3">
                                         {% if item.imagen %}
                                         <img src="{{ item.imagen }}" style="width:65px; height:65px; object-fit:cover; border-radius:8px; border: 1px solid #363B43;" alt="{{ item.nombre }}">
@@ -36,13 +36,13 @@
                                         </div>
                                         {% endif %}
                                         <div>
-                                            <strong class="text-white d-block fs-6">{{ item.nombre }}</strong>
-                                            <span class="text-white-50 small">Código: #{{ item.id }}</span>
+                                            <strong class="text-white d-block fs-6 mb-1" style="color: #FFFFFF !important;">{{ item.nombre }}</strong>
+                                            <span class="small" style="color: #A0A6AF !important;">Código: #{{ item.id }}</span>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="text-center text-white" style="font-weight: 500;">${{ item.precio }}</td>
-                                <td class="text-center">
+                                <td class="text-center" style="padding: 16px; background-color: #1A1C20 !important; color: #FFFFFF !important; font-weight: 500;">${{ item.precio }}</td>
+                                <td class="text-center" style="padding: 16px; background-color: #1A1C20 !important;">
                                     <div class="d-inline-flex align-items-center justify-content-center gap-1 bg-dark px-2 py-1 rounded" style="border: 1px solid #363B43;">
                                         <a href="{% url 'restar_del_carrito' item.id %}" class="btn btn-sm btn-link text-white p-0 px-1 text-decoration-none" title="Restar una unidad">
                                             <i class="bi bi-dash-lg" style="font-size: 1.1rem; color: #E5252A;"></i>
@@ -53,8 +53,8 @@
                                         </a>
                                     </div>
                                 </td>
-                                <td class="text-center fw-bold" style="color: #E5252A; font-size: 1.05rem;">${{ item.subtotal }}</td>
-                                <td class="text-center">
+                                <td class="text-center fw-bold" style="padding: 16px; background-color: #1A1C20 !important; color: #E5252A !important; font-size: 1.1rem;">${{ item.subtotal }}</td>
+                                <td class="text-center" style="padding: 16px; background-color: #1A1C20 !important;">
                                     <a href="{% url 'eliminar_del_carrito' item.id %}" class="btn btn-outline-danger btn-sm" title="Quitar del carrito" style="border-radius: 6px;">
                                         <i class="bi bi-trash"></i>
                                     </a>
