@@ -1,6 +1,4 @@
-
 {% load static %}
-{% load carrito_tags %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,15 +11,65 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- CSS propio con versión para romper caché -->
-    <link rel="stylesheet" href="{% static 'css/estilos.css' %}?v=2.0">
+    <!-- CSS propio -->
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}?v=3.0">
     <style>
-        /* Reglas inline directas para garantizar contraste absoluto */
-        body {
+        /* ===== RESET GLOBAL OSCURO ===== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        html, body {
             background-color: #121316 !important;
             color: #F4F5F7 !important;
+            font-family: 'Poppins', sans-serif;
         }
-        .table, .table td, .table th, .table tr {
+
+        /* ===== TEXTOS ===== */
+        p, span, li, label, td, th, div, small, a {
+            color: #E2E6EC;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #FFFFFF !important;
+        }
+        strong, b {
+            color: #FFFFFF !important;
+        }
+        .text-muted {
+            color: #A0A8B4 !important;
+        }
+        .text-white-50 {
+            color: #C8CDD6 !important;
+        }
+        .text-danger {
+            color: #E5252A !important;
+        }
+        .text-warning {
+            color: #E5A025 !important;
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background-color: #0D0F12 !important;
+            border-bottom: 1px solid #2E3238;
+        }
+        .navbar .nav-link {
+            color: #E2E6EC !important;
+        }
+        .navbar .nav-link:hover {
+            color: #E5252A !important;
+        }
+        .logo-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+        }
+        .logo-img {
+            height: 36px;
+            border-radius: 4px;
+        }
+
+        /* ===== TABLAS ===== */
+        .table, .table td, .table th, .table tr, .table tbody, .table thead {
             background-color: #1A1C20 !important;
             color: #FFFFFF !important;
             border-color: #2E3238 !important;
@@ -29,38 +77,140 @@
         .table thead th {
             background-color: #121316 !important;
             color: #FFFFFF !important;
-            border-bottom: 2px solid #2E3238 !important;
+            border-bottom: 2px solid #E5252A !important;
         }
         .table-hover tbody tr:hover td {
             background-color: #22252B !important;
             color: #FFFFFF !important;
         }
-        .text-muted {
-            color: #C0C5CC !important;
-        }
-        .text-white-50 {
-            color: #D0D5DC !important;
-        }
-        .lead-text {
+
+        /* ===== CARDS ===== */
+        .card {
+            background-color: #1A1C20 !important;
+            border: 1px solid #2E3238 !important;
             color: #E2E6EC !important;
         }
-        p, span, label, td, th {
-            color: #E2E6EC;
-        }
-        h1, h2, h3, h4, h5, h6, strong, b {
+        .card-title, .card-header {
             color: #FFFFFF !important;
         }
-        .text-danger, .text-warning {
+        .card-text {
+            color: #C8CDD6 !important;
+        }
+
+        /* ===== FORMULARIOS ===== */
+        .form-control, .form-select {
+            background-color: #1E2126 !important;
+            border: 1px solid #3A3F4A !important;
+            color: #F4F5F7 !important;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: #22252B !important;
+            border-color: #E5252A !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 0 0 0.2rem rgba(229, 37, 42, 0.25) !important;
+        }
+        .form-control::placeholder {
+            color: #6C737E !important;
+        }
+        .form-label {
+            color: #E2E6EC !important;
+            font-weight: 500;
+        }
+
+        /* ===== BOTONES ===== */
+        .btn-primary {
+            background-color: #E5252A !important;
+            border-color: #E5252A !important;
+            color: #FFFFFF !important;
+        }
+        .btn-outline-secondary {
+            border-color: #4A505A !important;
+            color: #C8CDD6 !important;
+        }
+        .btn-outline-secondary:hover {
+            background-color: #2E3238 !important;
+            color: #FFFFFF !important;
+        }
+
+        /* ===== ALERTS / MENSAJES ===== */
+        .alert {
+            border-radius: 8px;
+        }
+        .alert p, .alert span, .alert div {
+            color: inherit !important;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background-color: #0D0F12 !important;
+            border-top: 1px solid #2E3238;
+        }
+        .footer-link {
+            color: #A0A8B4 !important;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-link:hover {
             color: #E5252A !important;
+        }
+
+        /* ===== BADGES ===== */
+        .badge.bg-danger {
+            background-color: #E5252A !important;
+        }
+
+        /* ===== DROPDOWN OSCURO ===== */
+        .dropdown-menu-dark {
+            background-color: #1A1C20 !important;
+            border: 1px solid #2E3238 !important;
+        }
+        .dropdown-menu-dark .dropdown-item {
+            color: #E2E6EC !important;
+        }
+        .dropdown-menu-dark .dropdown-item:hover {
+            background-color: #2E3238 !important;
+            color: #FFFFFF !important;
+        }
+
+        /* ===== SECCIONES ESPECIALES ===== */
+        section, .section-dark {
+            background-color: #121316;
+        }
+        .bg-dark {
+            background-color: #0D0F12 !important;
+        }
+        .bg-secondary {
+            background-color: #1A1C20 !important;
+        }
+
+        /* ===== NOSOTROS - textos de tarjetas ===== */
+        .card .card-body p,
+        .card .card-body span,
+        .card .card-body small {
+            color: #C8CDD6 !important;
+        }
+        .card .card-body h5,
+        .card .card-body h6 {
+            color: #FFFFFF !important;
+        }
+
+        /* ===== INICIO - subtítulos ===== */
+        .lead, .display-5, .display-6 {
+            color: #E2E6EC !important;
+        }
+
+        /* ===== CONTACTO - info-items ===== */
+        .info-item p, .info-item span, .info-item small {
+            color: #C8CDD6 !important;
         }
     </style>
 </head>
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
-        <!-- Logo y marca con imagen U/M -->
+        <!-- Logo y marca -->
         <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'inicio' %}">
             <img src="{% static 'imagenes/logo fondo oscuro.jpg' %}" alt="Urban Motion Logo" class="logo-img">
             <span class="logo-text text-white">URBAN <span class="text-danger">MOTION</span></span>
@@ -118,14 +268,10 @@
                 <li class="nav-item">
                     <a class="nav-link position-relative" href="{% url 'ver_carrito' %}">
                         <i class="bi bi-cart3 fs-5"></i>
-                        {% if request.session.carrito %}
-                        {% with total_prendas=request.session.carrito|total_articulos_carrito %}
-                        {% if total_prendas > 0 %}
+                        {% if total_unidades_carrito > 0 %}
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white fw-bold" style="background-color: #E5252A !important; font-size: 0.72rem; padding: 4px 7px;">
-                            {{ total_prendas }}
+                            {{ total_unidades_carrito }}
                         </span>
-                        {% endif %}
-                        {% endwith %}
                         {% endif %}
                     </a>
                 </li>
@@ -176,7 +322,7 @@
 </main>
 
 <!-- FOOTER -->
-<footer class="bg-dark text-light py-5 mt-5">
+<footer class="py-5 mt-5">
     <div class="container">
         <div class="row g-4">
             <div class="col-lg-4 col-md-6">
@@ -184,15 +330,15 @@
                     <img src="{% static 'imagenes/logo fondo oscuro.jpg' %}" alt="Urban Motion Logo" style="height:32px;">
                     <h5 class="logo-text mb-0 text-white">URBAN <span class="text-danger">MOTION</span></h5>
                 </div>
-                <p class="text-white-50">Tu tienda de ropa urbana y streetwear. Calidad y estilo para el movimiento cotidiano.</p>
+                <p style="color: #C8CDD6 !important;">Tu tienda de ropa urbana y streetwear. Calidad y estilo para el movimiento cotidiano.</p>
                 <div class="d-flex gap-3 mt-3">
-                    <a href="#" class="text-warning fs-5"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="text-warning fs-5"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="text-warning fs-5"><i class="bi bi-tiktok"></i></a>
+                    <a href="#" style="color: #E5A025 !important; font-size: 1.25rem;"><i class="bi bi-instagram"></i></a>
+                    <a href="#" style="color: #E5A025 !important; font-size: 1.25rem;"><i class="bi bi-facebook"></i></a>
+                    <a href="#" style="color: #E5A025 !important; font-size: 1.25rem;"><i class="bi bi-tiktok"></i></a>
                 </div>
             </div>
             <div class="col-lg-2 col-md-6 col-6">
-                <h6 class="text-warning mb-3 fw-bold">Navegación</h6>
+                <h6 style="color: #E5A025 !important;" class="mb-3 fw-bold">Navegación</h6>
                 <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
                     <li><a href="{% url 'inicio' %}" class="footer-link">Inicio</a></li>
                     <li><a href="{% url 'catalogo' %}" class="footer-link">Catálogo</a></li>
@@ -201,12 +347,12 @@
                 </ul>
             </div>
             <div class="col-lg-3 col-md-6 col-6">
-                <h6 class="text-warning mb-3 fw-bold">Mi Cuenta</h6>
+                <h6 style="color: #E5A025 !important;" class="mb-3 fw-bold">Mi Cuenta</h6>
                 <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'mi_perfil' %}" class="footer-link">Mi perfil</a></li>
                     <li><a href="{% url 'ver_carrito' %}" class="footer-link">Ver Carrito</a></li>
-                    <li><a href="{% url 'desloguearse' %}" class="footer-link text-danger">Cerrar sesión</a></li>
+                    <li><a href="{% url 'desloguearse' %}" class="footer-link" style="color: #E5252A !important;">Cerrar sesión</a></li>
                     {% else %}
                     <li><a href="{% url 'loguearse' %}" class="footer-link">Iniciar sesión</a></li>
                     <li><a href="{% url 'registrarse' %}" class="footer-link">Crear cuenta</a></li>
@@ -215,14 +361,14 @@
                 </ul>
             </div>
             <div class="col-lg-3 col-md-6">
-                <h6 class="text-warning mb-3 fw-bold">Contacto</h6>
-                <p class="text-white-50 mb-2"><i class="bi bi-geo-alt text-warning me-2"></i>Buenos Aires, Argentina</p>
-                <p class="text-white-50 mb-2"><i class="bi bi-envelope text-warning me-2"></i>info@urbanmotion.com.ar</p>
-                <p class="text-white-50 mb-0"><i class="bi bi-telephone text-warning me-2"></i>(011) 4000-0000</p>
+                <h6 style="color: #E5A025 !important;" class="mb-3 fw-bold">Contacto</h6>
+                <p style="color: #C8CDD6 !important;" class="mb-2"><i class="bi bi-geo-alt me-2" style="color: #E5A025;"></i>Buenos Aires, Argentina</p>
+                <p style="color: #C8CDD6 !important;" class="mb-2"><i class="bi bi-envelope me-2" style="color: #E5A025;"></i>info@urbanmotion.com.ar</p>
+                <p style="color: #C8CDD6 !important;" class="mb-0"><i class="bi bi-telephone me-2" style="color: #E5A025;"></i>(011) 4000-0000</p>
             </div>
         </div>
-        <hr class="border-secondary mt-4 mb-3">
-        <div class="text-center text-white-50 small">
+        <hr style="border-color: #2E3238;" class="mt-4 mb-3">
+        <div class="text-center small" style="color: #A0A8B4 !important;">
             &copy; 2024 Urban Motion. Todos los derechos reservados. | Proyecto Seminario TIC
         </div>
     </div>
