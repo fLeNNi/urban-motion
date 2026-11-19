@@ -1,5 +1,6 @@
 
 {% load static %}
+{% load carrito_tags %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -118,9 +119,13 @@
                     <a class="nav-link position-relative" href="{% url 'ver_carrito' %}">
                         <i class="bi bi-cart3 fs-5"></i>
                         {% if request.session.carrito %}
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
-                            {{ request.session.carrito|length }}
+                        {% with total_prendas=request.session.carrito|total_articulos_carrito %}
+                        {% if total_prendas > 0 %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger text-white fw-bold" style="background-color: #E5252A !important; font-size: 0.72rem; padding: 4px 7px;">
+                            {{ total_prendas }}
                         </span>
+                        {% endif %}
+                        {% endwith %}
                         {% endif %}
                     </a>
                 </li>
