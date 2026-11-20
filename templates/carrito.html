@@ -1,6 +1,7 @@
 
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}Carrito - Urban Motion{% endblock %}
 
@@ -41,7 +42,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="text-center" style="padding: 16px; background-color: #1A1C20 !important; color: #FFFFFF !important; font-weight: 500;">${{ item.precio }}</td>
+                                <td class="text-center" style="padding: 16px; background-color: #1A1C20 !important; color: #FFFFFF !important; font-weight: 500;">${{ item.precio|floatformat:2|intcomma }}</td>
                                 <td class="text-center" style="padding: 16px; background-color: #1A1C20 !important;">
                                     <div class="d-inline-flex align-items-center justify-content-center gap-1 bg-dark px-2 py-1 rounded" style="border: 1px solid #363B43;">
                                         <a href="{% url 'restar_del_carrito' item.id %}" class="btn btn-sm btn-link text-white p-0 px-1 text-decoration-none" title="Restar una unidad">
@@ -53,7 +54,7 @@
                                         </a>
                                     </div>
                                 </td>
-                                <td class="text-center fw-bold" style="padding: 16px; background-color: #1A1C20 !important; color: #E5252A !important; font-size: 1.1rem;">${{ item.subtotal }}</td>
+                                <td class="text-center fw-bold" style="padding: 16px; background-color: #1A1C20 !important; color: #FFFFFF !important; font-size: 1.1rem;">${{ item.subtotal|floatformat:2|intcomma }}</td>
                                 <td class="text-center" style="padding: 16px; background-color: #1A1C20 !important;">
                                     <a href="{% url 'eliminar_del_carrito' item.id %}" class="btn btn-outline-danger btn-sm" title="Quitar del carrito" style="border-radius: 6px;">
                                         <i class="bi bi-trash"></i>
