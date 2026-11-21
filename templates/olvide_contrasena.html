@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Recuperar Contraseña - Urban Motion{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header text-center py-4" style="background-color: #121316 !important; border-bottom: 2px solid #E5252A;">
+                    <i class="bi bi-shield-lock" style="font-size: 2.8rem; color: #E5252A;"></i>
+                    <h3 class="fw-bold mt-2 mb-1" style="color: #FFFFFF !important;">¿Olvidaste tu contraseña?</h3>
+                    <p style="color: #A0A8B4 !important;" class="mb-0 small">
+                        Ingresá tu usuario y correo registrado para restablecerla.
+                    </p>
+                </div>
+                <div class="card-body p-4 p-md-5">
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-lg fw-bold" style="background-color: #E5252A; color: #fff; border: none;">
+                                <i class="bi bi-key me-2"></i>Restablecer contraseña
+                            </button>
+                            <a href="{% url 'loguearse' %}" class="btn btn-outline-secondary mt-1">
+                                <i class="bi bi-arrow-left me-1"></i>Volver a Iniciar Sesión
+                            </a>
+                        </div>
+                    </form>
+
+                    <hr class="my-4" style="border-color: #2E3238;">
+                    
+                    <div class="text-center">
+                        <small style="color: #A0A8B4 !important;">
+                            ¿Tenés problemas con tu cuenta? 
+                            <a href="{% url 'contacto' %}" style="color: #E5A025 !important;" class="fw-semibold">Contactanos</a>
+                        </small>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.db.models import Q
 from rest_framework.authtoken.models import Token
 from .models import Producto, Categoria, Pedido, DetallePedido, Consulta
-from .forms import ConsultaForm, UserCreateForm, UserUpdateForm, ProductoForm
+from .forms import ConsultaForm, UserCreateForm, UserUpdateForm, ProductoForm, ResetPasswordForm
 
 
 # ============================================================
@@ -208,6 +208,36 @@ def cambiar_contrasena(request):
     else:
         form = PasswordChangeForm(user=request.user)
     return render(request, 'cambiar_contrasena.html', {'form': form})
+
+
+# ============================================================
+# OLVIDÉ MI CONTRASEÑA
+# ============================================================
+
+def olvide_contrasena(request):
+    """Página para recuperar / restablecer contraseña con usuario y correo registrado"""
+    if request.method == 'POST':
+        form = ResetPasswordForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username'].strip()
+            email = form.cleaned_data['email'].strip().lower()
+            nueva_password = form.cleaned_data['nueva_password']
+            try:
+                user = User.objects.get(username__iexact=username)
+                if user.email and user.email.strip().lower() == email:
+                    user.set_password(nueva_password)
+                    user.save()
+                    messages.success(request, '¡Contraseña restablecida con éxito! Ya podés iniciar sesión con tu nueva contraseña.')
+                    return redirect('loguearse')
+                else:
+                    messages.error(request, 'El correo electrónico no coincide con el registrado para este usuario.')
+            except User.DoesNotExist:
+                messages.error(request, 'No existe ningún usuario registrado con ese nombre de usuario.')
+        else:
+            messages.error(request, 'Por favor revisá los campos del formulario.')
+    else:
+        form = ResetPasswordForm()
+    return render(request, 'olvide_contrasena.html', {'form': form})
 
 
 # ============================================================

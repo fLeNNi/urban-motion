@@ -75,3 +75,31 @@ class ProductoForm(forms.ModelForm):
             'imagen': 'Imagen del producto',
             'activo': 'Producto activo (visible en el catálogo)',
         }
+
+
+class ResetPasswordForm(forms.Form):
+    username = forms.CharField(
+        label="Usuario",
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Tu nombre de usuario'}),
+    )
+    email = forms.EmailField(
+        label="Correo electrónico registrado",
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'tu@email.com'}),
+    )
+    nueva_password = forms.CharField(
+        label="Nueva contraseña",
+        min_length=6,
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Mínimo 6 caracteres'}),
+    )
+    confirmar_password = forms.CharField(
+        label="Confirmar nueva contraseña",
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Repetí la contraseña'}),
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        p1 = cleaned_data.get('nueva_password')
+        p2 = cleaned_data.get('confirmar_password')
+        if p1 and p2 and p1 != p2:
+            raise forms.ValidationError("Las contraseñas no coinciden.")
+        return cleaned_data
