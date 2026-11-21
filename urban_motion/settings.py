@@ -51,6 +51,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'tienda.context_processors.carrito_total',
+                'tienda.context_processors.token_y_sesion',
             ],
         },
     },
