@@ -1,7 +1,8 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -171,6 +172,7 @@ def eliminar_usuario(request, pk):
 # ============================================================
 
 @login_required
+@login_required
 def mi_perfil(request):
     """Perfil con token y cookies de sesión"""
     token, created = Token.objects.get_or_create(user=request.user)
@@ -184,6 +186,28 @@ def mi_perfil(request):
         'cookies_data': cookies_data,
         'mis_pedidos': mis_pedidos,
     })
+
+
+# ============================================================
+# CAMBIAR CONTRASEÑA
+# ============================================================
+
+@login_required
+def cambiar_contrasena(request):
+    """Permite al usuario cambiar su contraseña"""
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            # Mantener la sesión activa después del cambio
+            update_session_auth_hash(request, form.user)
+            messages.success(request, '¡Contraseña cambiada con éxito!')
+            return redirect('mi_perfil')
+        else:
+            messages.error(request, 'Corregí los errores del formulario.')
+    else:
+        form = PasswordChangeForm(user=request.user)
+    return render(request, 'cambiar_contrasena.html', {'form': form})
 
 
 # ============================================================
