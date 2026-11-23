@@ -452,7 +452,7 @@ def importar_producto_api(request):
         producto = Producto(
             nombre=titulo[:190],
             descripcion=descripcion,
-            precio=float(precio) * 1000, # multiplicador de cambio aproximado a ARS
+            precio=float(str(precio).replace(',', '.')) * 1000, # multiplicador de cambio aproximado a ARS
             stock=15,
             categoria=categoria,
             activo=True
