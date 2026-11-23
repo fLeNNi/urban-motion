@@ -27,8 +27,8 @@ body {
 }
 
 /* Forzar legibilidad y contraste en textos secundarios */
-.text-muted {
-    color: #A9B0B8 !important;
+.form-text {
+    color: #FFFFFF !important;
 }
 
 .text-white-50 {
