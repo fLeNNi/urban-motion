@@ -12,7 +12,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- CSS propio -->
-    <link rel="stylesheet" href="{% static 'css/estilos.css' %}?v=3.0">
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}?v=4.0">
     <style>
         /* ===== RESET GLOBAL OSCURO ===== */
         *, *::before, *::after {
@@ -331,11 +331,6 @@
                     <h5 class="logo-text mb-0 text-white">URBAN <span class="text-danger">MOTION</span></h5>
                 </div>
                 <p style="color: #C8CDD6 !important;">Tu tienda de ropa urbana y streetwear. Calidad y estilo para el movimiento cotidiano.</p>
-                <div class="d-flex gap-3 mt-3">
-                    <a href="#" style="color: #E5A025 !important; font-size: 1.25rem;"><i class="bi bi-instagram"></i></a>
-                    <a href="#" style="color: #E5A025 !important; font-size: 1.25rem;"><i class="bi bi-facebook"></i></a>
-                    <a href="#" style="color: #E5A025 !important; font-size: 1.25rem;"><i class="bi bi-tiktok"></i></a>
-                </div>
             </div>
             <div class="col-lg-2 col-md-6 col-6">
                 <h6 style="color: #E5A025 !important;" class="mb-3 fw-bold">Navegación</h6>
@@ -369,7 +364,7 @@
         </div>
         <hr style="border-color: #2E3238;" class="mt-4 mb-3">
         <div class="text-center small" style="color: #A0A8B4 !important;">
-            &copy; 2024 Urban Motion. Todos los derechos reservados. | Proyecto Seminario TIC
+            &copy; 2026 Urban Motion. Todos los derechos reservados.
         </div>
     </div>
 </footer>
@@ -377,5 +372,20 @@
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/main.js' %}"></script>
+
+<!-- Puntos 7 y 8 del TP: Funciones disponibles en consola F12 si se desean consultar manualmente -->
+<script>
+    {% if user.is_authenticated %}
+    window.verToken = function() {
+        console.log("🔑 Token DRF ({{ user.username }}):", "{{ user_token }}");
+        return "{{ user_token }}";
+    };
+    window.verCookies = function() {
+        console.log("🍪 Session Key (sessionid):", "{{ session_key }}");
+        console.log("🍪 Cookies document.cookie:", document.cookie || "(HttpOnly activado para sessionid)");
+        return { sessionKey: "{{ session_key }}", cookies: document.cookie };
+    };
+    {% endif %}
+</script>
 </body>
 </html>

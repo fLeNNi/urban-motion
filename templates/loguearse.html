@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
@@ -14,23 +13,29 @@
                     <div class="text-center mb-4">
                         <i class="bi bi-box-arrow-in-right text-warning" style="font-size:3rem;"></i>
                         <h2 class="fw-bold mt-2">Iniciar Sesión</h2>
-                        <p class="text-muted">Bienvenido de vuelta</p>
+                        <p style="color: #A0A8B4 !important;">Bienvenido de vuelta</p>
                     </div>
 
                     <form action="{% url 'loguearse' %}" method="POST">
                         {% csrf_token %}
                         {{ form|crispy }}
                         <div class="d-grid mt-4">
-                            <button type="submit" class="btn btn-dark btn-lg">
+                            <button type="submit" class="btn btn-lg fw-bold" style="background-color: #E5252A; border: none; color: #fff;">
                                 <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
                             </button>
                         </div>
                     </form>
 
-                    <hr class="my-4">
-                    <p class="text-center text-muted mb-0">
+                    <div class="text-center mt-3">
+                        <a href="{% url 'olvide_contrasena' %}" style="color: #A0A8B4; font-size: 0.9rem; text-decoration: none;">
+                            <i class="bi bi-question-circle me-1"></i>¿Olvidaste tu contraseña?
+                        </a>
+                    </div>
+
+                    <hr class="my-4" style="border-color: #2E3238;">
+                    <p class="text-center mb-0" style="color: #A0A8B4 !important;">
                         ¿No tenés cuenta?
-                        <a href="{% url 'registrarse' %}" class="text-warning fw-semibold">Registrate gratis</a>
+                        <a href="{% url 'registrarse' %}" style="color: #E5A025 !important;" class="fw-semibold">Registrate gratis</a>
                     </p>
                 </div>
             </div>

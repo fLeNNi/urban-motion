@@ -24,6 +24,11 @@
                     <div class="mt-3 text-muted small">
                         <i class="bi bi-calendar"></i> Miembro desde {{ user.date_joined|date:"d/m/Y" }}
                     </div>
+                    <div class="mt-3">
+                        <a href="{% url 'cambiar_contrasena' %}" class="btn btn-sm w-100 fw-semibold" style="background-color: #1E2126; border: 1px solid #3A3F4A; color: #E2E6EC;">
+                            <i class="bi bi-shield-lock me-1" style="color: #E5252A;"></i>Cambiar contraseña
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

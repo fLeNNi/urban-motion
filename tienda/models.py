@@ -21,6 +21,7 @@ class Producto(models.Model):
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.PositiveIntegerField(default=0)
+    # SET_NULL para no borrar prendas si se elimina la categoria
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, related_name='productos')
     imagen = models.ImageField(upload_to='productos/', blank=True, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -60,6 +61,7 @@ class DetallePedido(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE, related_name='detalles')
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField(default=1)
+    # Guardamos precio unitario historico para que no cambie si se edita el producto despues
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
 
     def subtotal(self):

@@ -37,7 +37,25 @@ class ConsultaForm(forms.ModelForm):
         }
 
 
-class UserUpdateForm(forms.ModelForm):
+class UserProfileForm(forms.ModelForm):
+    """Formulario para que usuarios comunes editen su propio perfil (sin permisos de staff)."""
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'form-control'}),
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+class UserAdminUpdateForm(forms.ModelForm):
+    """Formulario de administración exclusivo para staff (gestiona flags de estado y staff)."""
     email = forms.EmailField(
         required=True,
         widget=forms.EmailInput(attrs={'class': 'form-control'}),
@@ -51,6 +69,18 @@ class UserUpdateForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # Protección de superusuario: evitar que se desactive o quite staff a un superusuario accidentalmente
+        if self.instance and self.instance.is_superuser:
+            cleaned_data['is_staff'] = True
+            cleaned_data['is_active'] = True
+        return cleaned_data
+
+
+# Alias para retrocompatibilidad
+UserUpdateForm = UserAdminUpdateForm
 
 
 class ProductoForm(forms.ModelForm):

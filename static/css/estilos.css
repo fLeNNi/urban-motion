@@ -27,8 +27,8 @@ body {
 }
 
 /* Forzar legibilidad y contraste en textos secundarios */
-.text-muted {
-    color: #A9B0B8 !important;
+.form-text {
+    color: #FFFFFF !important;
 }
 
 .text-white-50 {
@@ -115,8 +115,13 @@ body {
    HERO BANNER
    ============================================================ */
 .hero-section {
-    background: radial-gradient(circle at 80% 20%, rgba(229, 37, 42, 0.15) 0%, transparent 50%),
-                linear-gradient(135deg, #101114 0%, #17181D 60%, #1F2127 100%);
+    background: 
+        linear-gradient(rgba(16, 17, 20, 0.45), rgba(16, 17, 20, 0.65)),
+        url("../imagenes/urban_motion_portada_sin_texto.jpg") center center / cover no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    
     min-height: 82vh;
     display: flex;
     align-items: center;
