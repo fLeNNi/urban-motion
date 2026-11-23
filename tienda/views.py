@@ -165,6 +165,15 @@ def eliminar_usuario(request, pk):
         return redirect('inicio')
 
     usuario = get_object_or_404(User, pk=pk)
+
+    # Proteccion: no se puede borrar a un superusuario (salvo otro superusuario) ni a uno mismo
+    if usuario.is_superuser and not request.user.is_superuser:
+        messages.error(request, 'No tenés permisos para eliminar a un superadministrador.')
+        return redirect('lista_usuarios')
+    if usuario.pk == request.user.pk:
+        messages.error(request, 'No podés eliminar tu propia cuenta desde acá.')
+        return redirect('lista_usuarios')
+
     if request.method == 'POST':
         usuario.delete()
         messages.success(request, 'Usuario eliminado correctamente.')
