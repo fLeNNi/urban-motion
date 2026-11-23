@@ -11,13 +11,13 @@ __pycache__/
 *.so
 
 # Base de datos local (opcional si preferís que cada uno haga sus migraciones)
-# db.sqlite3
+db.sqlite3
 
 # Archivos estáticos recolectados
 staticfiles/
 
 # Archivos de medios subidos por usuarios (opcional, podés dejar las fotos o excluirlas)
-# media/
+media/
 
 # IDEs y editores
 .vscode/
