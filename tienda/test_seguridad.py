@@ -1,4 +1,6 @@
-from django.test import TestCase
+import re
+from django.core import mail
+from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
@@ -104,30 +106,60 @@ class C02ResetPasswordTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user('juan', 'juan@x.com', 'ClaveOriginal#2026')
 
-    def _reset(self, username, email, pwd):
-        return self.client.post(reverse('olvide_contrasena'), {
-            'username': username, 'email': email,
-            'nueva_password': pwd, 'confirmar_password': pwd,
-        })
+    def _pedir_link(self, email):
+        return self.client.post(reverse('olvide_contrasena'), {'email': email})
 
-    def test_rechaza_password_debil(self):
-        self._reset('juan', 'juan@x.com', '123456')
+    def _link_del_mail(self):
+        cuerpo = mail.outbox[-1].body
+        return re.search(r'http://testserver(/reset/[^\s]+)', cuerpo).group(1)
+
+    def test_respuesta_identica_exista_o_no_el_email(self):
+        r1 = self._pedir_link('juan@x.com')
+        r2 = self._pedir_link('noexiste@x.com')
+        self.assertEqual((r1.status_code, r1.url), (r2.status_code, r2.url))
+
+    def test_solo_se_envia_mail_si_el_usuario_existe(self):
+        self._pedir_link('noexiste@x.com')
+        self.assertEqual(len(mail.outbox), 0)
+        self._pedir_link('juan@x.com')
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ['juan@x.com'])
+
+    def test_no_se_puede_cambiar_clave_solo_con_usuario_y_email(self):
+        # El endpoint viejo aceptaba usuario + email + nueva clave. Ya no debe cambiar nada.
+        self.client.post(reverse('olvide_contrasena'), {
+            'username': 'juan', 'email': 'juan@x.com',
+            'nueva_password': 'ClaveAtacante#9876', 'confirmar_password': 'ClaveAtacante#9876',
+        })
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password('ClaveOriginal#2026'))
 
-    def test_respuesta_generica_no_enumera_usuarios(self):
-        r1 = self._reset('noexiste', 'a@x.com', 'OtraClave#9876')
-        r2 = self._reset('juan', 'incorrecto@x.com', 'OtraClave#9876')
-        m1 = [str(m) for m in r1.context['messages']]
-        m2 = [str(m) for m in r2.context['messages']]
-        self.assertEqual(m1, m2)
+    def test_link_falso_es_rechazado(self):
+        r = self.client.get(reverse('password_reset_confirm', args=['MQ', 'token-falso-123']), follow=True)
+        self.assertFalse(r.context['validlink'])
 
-    def test_no_permite_toma_de_cuenta_solo_con_usuario_y_email(self):
-        # Un atacante que conoce usuario + email NO deberia poder cambiar la clave sin token por correo
-        self._reset('juan', 'juan@x.com', 'ClaveAtacante#9876')
+    def test_flujo_completo_con_link_valido(self):
+        self._pedir_link('juan@x.com')
+        r = self.client.get(self._link_del_mail(), follow=True)
+        url_form = r.redirect_chain[-1][0]
+        # Clave debil: rechazada
+        self.client.post(url_form, {'new_password1': '123456', 'new_password2': '123456'})
         self.user.refresh_from_db()
-        self.assertTrue(self.user.check_password('ClaveOriginal#2026'),
-                        'Se cambio la clave solo con usuario+email (sin token de verificacion)')
+        self.assertTrue(self.user.check_password('ClaveOriginal#2026'))
+        # Clave fuerte: aceptada
+        self.client.post(url_form, {'new_password1': 'ClaveNueva#9876', 'new_password2': 'ClaveNueva#9876'})
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('ClaveNueva#9876'))
+
+    def test_el_link_se_usa_una_sola_vez(self):
+        self._pedir_link('juan@x.com')
+        link = self._link_del_mail()
+        r = self.client.get(link, follow=True)
+        url_form = r.redirect_chain[-1][0]
+        self.client.post(url_form, {'new_password1': 'ClaveNueva#9876', 'new_password2': 'ClaveNueva#9876'})
+        # Reusar el mismo link ya no sirve
+        r2 = Client().get(link, follow=True)
+        self.assertFalse(r2.context['validlink'])
 
 
 class ConsultasApiTests(TestCase):

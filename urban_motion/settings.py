@@ -134,3 +134,16 @@ REST_FRAMEWORK = {
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Recuperacion de contraseña: el link por correo vence en 1 hora y se usa una sola vez.
+# Por defecto el "correo" se imprime en la consola del servidor (ideal para demo).
+# Para enviar mails reales: DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+# + DJANGO_EMAIL_HOST, DJANGO_EMAIL_PORT, DJANGO_EMAIL_USER, DJANGO_EMAIL_PASSWORD
+PASSWORD_RESET_TIMEOUT = 3600
+EMAIL_BACKEND = os.environ.get('DJANGO_EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = os.environ.get('DJANGO_EMAIL_HOST', 'localhost')
+EMAIL_PORT = int(os.environ.get('DJANGO_EMAIL_PORT', '587'))
+EMAIL_HOST_USER = os.environ.get('DJANGO_EMAIL_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('DJANGO_EMAIL_PASSWORD', '')
+EMAIL_USE_TLS = os.environ.get('DJANGO_EMAIL_TLS', 'True').lower() in ('true', '1', 'yes')
+DEFAULT_FROM_EMAIL = 'Urban Motion <no-reply@urbanmotion.com.ar>'

@@ -1,5 +1,6 @@
 
-from django.urls import path
+from django.urls import path, reverse_lazy
+from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
@@ -14,7 +15,23 @@ urlpatterns = [
     path('registro/', views.registrarse, name='registrarse'),
     path('login/', views.loguearse, name='loguearse'),
     path('logout/', views.desloguearse, name='desloguearse'),
-    path('olvide-contrasena/', views.olvide_contrasena, name='olvide_contrasena'),
+    # Recuperacion de contraseña con link firmado (token de un solo uso, vence en 1 hora)
+    path('olvide-contrasena/', auth_views.PasswordResetView.as_view(
+        template_name='password_reset_form.html',
+        email_template_name='password_reset_email.txt',
+        subject_template_name='password_reset_subject.txt',
+        success_url=reverse_lazy('password_reset_done'),
+    ), name='olvide_contrasena'),
+    path('olvide-contrasena/enviado/', auth_views.PasswordResetDoneView.as_view(
+        template_name='password_reset_done.html',
+    ), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
+        template_name='password_reset_confirm.html',
+        success_url=reverse_lazy('password_reset_complete'),
+    ), name='password_reset_confirm'),
+    path('reset/listo/', auth_views.PasswordResetCompleteView.as_view(
+        template_name='password_reset_complete.html',
+    ), name='password_reset_complete'),
 
     # Perfil y usuarios
     path('perfil/', views.mi_perfil, name='mi_perfil'),

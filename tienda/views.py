@@ -10,12 +10,11 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.db.models import Q
 from django.core.files.base import ContentFile
-from django.contrib.auth.password_validation import validate_password
 from rest_framework.authtoken.models import Token
 from .models import Producto, Categoria, Pedido, DetallePedido, Consulta
 from .forms import (
     ConsultaForm, UserCreateForm, UserUpdateForm,
-    UserProfileForm, UserAdminUpdateForm, ProductoForm, ResetPasswordForm
+    UserProfileForm, UserAdminUpdateForm, ProductoForm
 )
 
 
@@ -213,41 +212,6 @@ def cambiar_contrasena(request):
     else:
         form = PasswordChangeForm(user=request.user)
     return render(request, 'cambiar_contrasena.html', {'form': form})
-
-
-def olvide_contrasena(request):
-    # Recuperacion verificando usuario y correo en BD con validacion robusta
-    if request.method == 'POST':
-        form = ResetPasswordForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username'].strip()
-            email = form.cleaned_data['email'].strip().lower()
-            nueva_password = form.cleaned_data['nueva_password']
-            try:
-                user = User.objects.get(username__iexact=username)
-                if user.email and user.email.strip().lower() == email:
-                    # Validar fortaleza de contraseña con validadores oficiales de Django
-                    try:
-                        validate_password(nueva_password, user=user)
-                    except Exception as err:
-                        messages.error(request, f"La contraseña no cumple las reglas de seguridad: {', '.join(err.messages)}")
-                        return render(request, 'olvide_contrasena.html', {'form': form})
-
-                    user.set_password(nueva_password)
-                    user.save()
-                    messages.success(request, 'Contraseña restablecida con éxito. Ya podés iniciar sesión.')
-                    return redirect('loguearse')
-                else:
-                    # Mensaje generico para mitigar enumeracion de usuarios
-                    messages.error(request, 'Los datos ingresados no coinciden con ningún registro activo.')
-            except User.DoesNotExist:
-                # Mensaje generico para mitigar enumeracion de usuarios
-                messages.error(request, 'Los datos ingresados no coinciden con ningún registro activo.')
-        else:
-            messages.error(request, 'Por favor revisá los campos del formulario.')
-    else:
-        form = ResetPasswordForm()
-    return render(request, 'olvide_contrasena.html', {'form': form})
 
 
 # --- Carrito de compras (guardado en request.session) ---
