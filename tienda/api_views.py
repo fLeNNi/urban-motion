@@ -16,18 +16,18 @@ from .serializers import (
 # VIEWSETS (CRUD API REST)
 # ============================================================
 
-class SoloStaffEscribe(BasePermission):
-    """Lectura publica; crear/editar/borrar solo para staff."""
+class IsAdminOrReadOnly(BasePermission):
+    """Lectura publica; modificar solo usuarios administradores activos."""
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
-        return bool(request.user and request.user.is_authenticated and request.user.is_staff)
+        return bool(request.user and request.user.is_authenticated and request.user.is_active and request.user.is_staff)
 
 
 class ProductoViewSet(viewsets.ModelViewSet):
     queryset = Producto.objects.filter(activo=True)
     serializer_class = ProductoSerializer
-    permission_classes = [SoloStaffEscribe]
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -43,7 +43,7 @@ class ProductoViewSet(viewsets.ModelViewSet):
 class CategoriaViewSet(viewsets.ModelViewSet):
     queryset = Categoria.objects.all()
     serializer_class = CategoriaSerializer
-    permission_classes = [SoloStaffEscribe]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class UserViewSet(viewsets.ModelViewSet):
