@@ -46,6 +46,17 @@ class PedidoSerializer(serializers.ModelSerializer):
         model = Pedido
         fields = ['id', 'usuario', 'usuario_username', 'fecha', 'estado', 'total',
                   'direccion_envio', 'detalles']
+        # El usuario, total y fecha son administrados por el servidor para evitar suplantacion o montos arbitrarios
+        read_only_fields = ['id', 'usuario', 'usuario_username', 'fecha', 'total']
+
+    def validate_estado(self, value):
+        request = self.context.get('request')
+        # Solo el personal administrativo puede alterar estados de pedidos
+        if request and not request.user.is_staff:
+            if self.instance and self.instance.estado != value:
+                raise serializers.ValidationError("Solo el personal administrativo puede modificar el estado de un pedido.")
+            return 'pendiente'
+        return value
 
 
 class ConsultaSerializer(serializers.ModelSerializer):

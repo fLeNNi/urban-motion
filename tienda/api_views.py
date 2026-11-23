@@ -51,6 +51,22 @@ class PedidoViewSet(viewsets.ModelViewSet):
             return Pedido.objects.all()
         return Pedido.objects.filter(usuario=self.request.user)
 
+    def perform_create(self, serializer):
+        # Asigna estrictamente al usuario autenticado (mitiga suplantacion de pedidos)
+        estado_inicial = 'pendiente' if not self.request.user.is_staff else serializer.validated_data.get('estado', 'pendiente')
+        serializer.save(
+            usuario=self.request.user,
+            estado=estado_inicial,
+            total=0
+        )
+
+    def check_object_permissions(self, request, obj):
+        super().check_object_permissions(request, obj)
+        # Clientes comunes solo pueden ver sus pedidos; no pueden alterar estados ni borrar pedidos
+        if not request.user.is_staff and request.method in ['PUT', 'PATCH', 'DELETE']:
+            from rest_framework.exceptions import PermissionDenied
+            raise PermissionDenied("Los clientes solo tienen permisos de lectura sobre sus pedidos.")
+
 
 class ConsultaViewSet(viewsets.ModelViewSet):
     queryset = Consulta.objects.all()

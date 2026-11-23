@@ -10,9 +10,13 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.db.models import Q
 from django.core.files.base import ContentFile
+from django.contrib.auth.password_validation import validate_password
 from rest_framework.authtoken.models import Token
 from .models import Producto, Categoria, Pedido, DetallePedido, Consulta
-from .forms import ConsultaForm, UserCreateForm, UserUpdateForm, ProductoForm, ResetPasswordForm
+from .forms import (
+    ConsultaForm, UserCreateForm, UserUpdateForm,
+    UserProfileForm, UserAdminUpdateForm, ProductoForm, ResetPasswordForm
+)
 
 
 # --- Vistas publicas ---
@@ -125,20 +129,32 @@ def lista_usuarios(request):
 
 @login_required
 def editar_usuario(request, pk):
+    usuario = get_object_or_404(User, pk=pk)
+
+    # Solo staff o el propio usuario pueden editar
     if not request.user.is_staff and request.user.pk != pk:
         messages.error(request, 'No tenés permisos para editar este usuario.')
         return redirect('inicio')
 
-    usuario = get_object_or_404(User, pk=pk)
+    # Proteccion de superusuario: solo superuser puede modificar a otro superuser
+    if usuario.is_superuser and not request.user.is_superuser:
+        messages.error(request, 'No tenés permisos para modificar a un superadministrador.')
+        return redirect('lista_usuarios' if request.user.is_staff else 'inicio')
+
+    # Separamos formulario: staff usa UserAdminUpdateForm (con flags), usuario comun usa UserProfileForm (sin flags)
+    FormClass = UserAdminUpdateForm if request.user.is_staff else UserProfileForm
+
     if request.method == 'GET':
-        form = UserUpdateForm(instance=usuario)
+        form = FormClass(instance=usuario)
         return render(request, 'editar_usuario.html', {'form': form, 'usuario': usuario})
     else:
-        form = UserUpdateForm(request.POST, instance=usuario)
+        form = FormClass(request.POST, instance=usuario)
         if form.is_valid():
             form.save()
             messages.success(request, 'Datos de usuario actualizados.')
-            return redirect('lista_usuarios')
+            if request.user.is_staff:
+                return redirect('lista_usuarios')
+            return redirect('mi_perfil')
         return render(request, 'editar_usuario.html', {'form': form, 'usuario': usuario})
 
 
@@ -191,7 +207,7 @@ def cambiar_contrasena(request):
 
 
 def olvide_contrasena(request):
-    # Recuperacion simple verificando usuario y correo en BD
+    # Recuperacion verificando usuario y correo en BD con validacion robusta
     if request.method == 'POST':
         form = ResetPasswordForm(request.POST)
         if form.is_valid():
@@ -201,16 +217,25 @@ def olvide_contrasena(request):
             try:
                 user = User.objects.get(username__iexact=username)
                 if user.email and user.email.strip().lower() == email:
+                    # Validar fortaleza de contraseña con validadores oficiales de Django
+                    try:
+                        validate_password(nueva_password, user=user)
+                    except Exception as err:
+                        messages.error(request, f"La contraseña no cumple las reglas de seguridad: {', '.join(err.messages)}")
+                        return render(request, 'olvide_contrasena.html', {'form': form})
+
                     user.set_password(nueva_password)
                     user.save()
-                    messages.success(request, 'Contraseña restablecida. Ya podés iniciar sesión.')
+                    messages.success(request, 'Contraseña restablecida con éxito. Ya podés iniciar sesión.')
                     return redirect('loguearse')
                 else:
-                    messages.error(request, 'El correo no coincide con el usuario registrado.')
+                    # Mensaje generico para mitigar enumeracion de usuarios
+                    messages.error(request, 'Los datos ingresados no coinciden con ningún registro activo.')
             except User.DoesNotExist:
-                messages.error(request, 'No existe un usuario con ese nombre.')
+                # Mensaje generico para mitigar enumeracion de usuarios
+                messages.error(request, 'Los datos ingresados no coinciden con ningún registro activo.')
         else:
-            messages.error(request, 'Revisá los campos del formulario.')
+            messages.error(request, 'Por favor revisá los campos del formulario.')
     else:
         form = ResetPasswordForm()
     return render(request, 'olvide_contrasena.html', {'form': form})
