@@ -200,3 +200,25 @@ class CatalogoApiPermisosTests(TestCase):
         api.force_authenticate(self.staff)
         r = api.post(reverse('categoria-list'), {'nombre': 'Buzos'}, format='json')
         self.assertEqual(r.status_code, 201)
+
+    def test_cliente_no_puede_modificar_catalogo_desde_vistas_web(self):
+        from .models import Producto
+        self.client.login(username='cliente', password='ClavePrueba#2026')
+
+        r = self.client.get(reverse('admin_productos'))
+        self.assertEqual(r.status_code, 302)
+
+        r = self.client.post(reverse('crear_producto'), {
+            'nombre': 'Producto hack',
+            'descripcion': 'x',
+            'precio': '1',
+            'stock': '1',
+            'categoria': self.cat.pk,
+            'activo': 'on',
+        })
+        self.assertEqual(r.status_code, 302)
+        self.assertFalse(Producto.objects.filter(nombre='Producto hack').exists())
+
+        r = self.client.post(reverse('eliminar_producto', args=[self.prod.pk]))
+        self.assertEqual(r.status_code, 302)
+        self.assertTrue(Producto.objects.filter(pk=self.prod.pk).exists())

@@ -19,6 +19,10 @@ from .forms import (
 )
 
 
+def es_administrador(user):
+    return bool(user.is_authenticated and user.is_active and user.is_staff)
+
+
 # --- Vistas publicas ---
 
 def inicio(request):
@@ -409,11 +413,11 @@ def lista_consultas(request):
     return render(request, 'lista_consultas.html', {'consultas': consultas})
 
 
-# --- Administracion de productos (Staff) ---
+# --- Administracion de productos (solo administradores) ---
 
 @login_required
 def admin_productos(request):
-    if not request.user.is_staff:
+    if not es_administrador(request.user):
         messages.error(request, 'Acceso denegado.')
         return redirect('inicio')
     productos = Producto.objects.all().order_by('-id')
@@ -422,7 +426,7 @@ def admin_productos(request):
 
 @login_required
 def crear_producto(request):
-    if not request.user.is_staff:
+    if not es_administrador(request.user):
         messages.error(request, 'Acceso denegado.')
         return redirect('inicio')
 
@@ -440,7 +444,7 @@ def crear_producto(request):
 
 @login_required
 def editar_producto(request, pk):
-    if not request.user.is_staff:
+    if not es_administrador(request.user):
         messages.error(request, 'Acceso denegado.')
         return redirect('inicio')
 
@@ -459,7 +463,7 @@ def editar_producto(request, pk):
 
 @login_required
 def eliminar_producto(request, pk):
-    if not request.user.is_staff:
+    if not es_administrador(request.user):
         messages.error(request, 'Acceso denegado.')
         return redirect('inicio')
 
@@ -506,7 +510,7 @@ def productos_api_externa(request):
 
 @login_required
 def importar_producto_api(request):
-    if not request.user.is_staff:
+    if not es_administrador(request.user):
         messages.error(request, 'Acceso denegado: solo administradores pueden importar.')
         return redirect('productos_api_externa')
 
