@@ -49,12 +49,16 @@ def catalogo(request):
     if categoria_id:
         productos = productos.filter(categoria_id=categoria_id)
 
-    # Buscador por nombre o descripcion
-    busqueda = request.GET.get('q')
+    
+    # Buscador por nombre, descripcion o categoria
+    busqueda = request.GET.get('q', '').strip()
     if busqueda:
         productos = productos.filter(
-            Q(nombre__icontains=busqueda) | Q(descripcion__icontains=busqueda)
+            Q(nombre__icontains=busqueda) |
+            Q(descripcion__icontains=busqueda) |
+            Q(categoria__nombre__icontains=busqueda)
         )
+
 
     return render(request, 'catalogo.html', {
         'productos': productos,
