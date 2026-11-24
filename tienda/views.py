@@ -12,7 +12,10 @@ from django.db.models import Q
 from django.core.files.base import ContentFile
 from rest_framework.authtoken.models import Token
 from .models import Producto, Categoria, Pedido, DetallePedido, Consulta
-from .forms import ConsultaForm, UserCreateForm, UserUpdateForm, ProductoForm, ResetPasswordForm
+from .forms import (
+    ConsultaForm, UserCreateForm, UserUpdateForm,
+    UserProfileForm, UserAdminUpdateForm, ProductoForm
+)
 
 
 # --- Vistas publicas ---
@@ -125,20 +128,32 @@ def lista_usuarios(request):
 
 @login_required
 def editar_usuario(request, pk):
+    usuario = get_object_or_404(User, pk=pk)
+
+    # Solo staff o el propio usuario pueden editar
     if not request.user.is_staff and request.user.pk != pk:
         messages.error(request, 'No tenés permisos para editar este usuario.')
         return redirect('inicio')
 
-    usuario = get_object_or_404(User, pk=pk)
+    # Proteccion de superusuario: solo superuser puede modificar a otro superuser
+    if usuario.is_superuser and not request.user.is_superuser:
+        messages.error(request, 'No tenés permisos para modificar a un superadministrador.')
+        return redirect('lista_usuarios' if request.user.is_staff else 'inicio')
+
+    # Separamos formulario: staff usa UserAdminUpdateForm (con flags), usuario comun usa UserProfileForm (sin flags)
+    FormClass = UserAdminUpdateForm if request.user.is_staff else UserProfileForm
+
     if request.method == 'GET':
-        form = UserUpdateForm(instance=usuario)
+        form = FormClass(instance=usuario)
         return render(request, 'editar_usuario.html', {'form': form, 'usuario': usuario})
     else:
-        form = UserUpdateForm(request.POST, instance=usuario)
+        form = FormClass(request.POST, instance=usuario)
         if form.is_valid():
             form.save()
             messages.success(request, 'Datos de usuario actualizados.')
-            return redirect('lista_usuarios')
+            if request.user.is_staff:
+                return redirect('lista_usuarios')
+            return redirect('mi_perfil')
         return render(request, 'editar_usuario.html', {'form': form, 'usuario': usuario})
 
 
@@ -149,6 +164,15 @@ def eliminar_usuario(request, pk):
         return redirect('inicio')
 
     usuario = get_object_or_404(User, pk=pk)
+
+    # Proteccion: no se puede borrar a un superusuario (salvo otro superusuario) ni a uno mismo
+    if usuario.is_superuser and not request.user.is_superuser:
+        messages.error(request, 'No tenés permisos para eliminar a un superadministrador.')
+        return redirect('lista_usuarios')
+    if usuario.pk == request.user.pk:
+        messages.error(request, 'No podés eliminar tu propia cuenta desde acá.')
+        return redirect('lista_usuarios')
+
     if request.method == 'POST':
         usuario.delete()
         messages.success(request, 'Usuario eliminado correctamente.')
@@ -188,32 +212,6 @@ def cambiar_contrasena(request):
     else:
         form = PasswordChangeForm(user=request.user)
     return render(request, 'cambiar_contrasena.html', {'form': form})
-
-
-def olvide_contrasena(request):
-    # Recuperacion simple verificando usuario y correo en BD
-    if request.method == 'POST':
-        form = ResetPasswordForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username'].strip()
-            email = form.cleaned_data['email'].strip().lower()
-            nueva_password = form.cleaned_data['nueva_password']
-            try:
-                user = User.objects.get(username__iexact=username)
-                if user.email and user.email.strip().lower() == email:
-                    user.set_password(nueva_password)
-                    user.save()
-                    messages.success(request, 'Contraseña restablecida. Ya podés iniciar sesión.')
-                    return redirect('loguearse')
-                else:
-                    messages.error(request, 'El correo no coincide con el usuario registrado.')
-            except User.DoesNotExist:
-                messages.error(request, 'No existe un usuario con ese nombre.')
-        else:
-            messages.error(request, 'Revisá los campos del formulario.')
-    else:
-        form = ResetPasswordForm()
-    return render(request, 'olvide_contrasena.html', {'form': form})
 
 
 # --- Carrito de compras (guardado en request.session) ---
