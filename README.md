@@ -1,7 +1,6 @@
 
 # Urban Motion - Tienda de Ropa Urbana
 
-Proyecto final del **Seminario de TIC** | Escuela Técnica - Buenos Aires
 
 ## Stack Tecnológico
 
