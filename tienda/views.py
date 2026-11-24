@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse
 from django.db.models import Q
+from django.db import transaction
 from django.core.files.base import ContentFile
 from rest_framework.authtoken.models import Token
 from .models import Producto, Categoria, Pedido, DetallePedido, Consulta
@@ -234,10 +235,22 @@ def ver_carrito(request):
     return render(request, 'carrito.html', {'items': items, 'total': total})
 
 
+
 def agregar_al_carrito(request, pk):
     producto = get_object_or_404(Producto, pk=pk, activo=True)
     carrito = request.session.get('carrito', {})
     pid = str(pk)
+
+    cantidad_actual = carrito.get(pid, {}).get('cantidad', 0)
+
+    # Validar que haya stock disponible
+    if cantidad_actual >= producto.stock:
+        messages.warning(
+            request,
+            f'No hay más stock disponible de {producto.nombre}.'
+        )
+        return redirect(request.META.get('HTTP_REFERER', 'catalogo'))
+
     if pid in carrito:
         carrito[pid]['cantidad'] += 1
     else:
@@ -247,9 +260,16 @@ def agregar_al_carrito(request, pk):
             'cantidad': 1,
             'imagen': producto.imagen.url if producto.imagen else '',
         }
+
     request.session['carrito'] = carrito
-    messages.success(request, f'"{producto.nombre}" agregado al carrito.')
+
+    messages.success(
+        request,
+        f'{producto.nombre} agregado al carrito.'
+    )
+
     return redirect(request.META.get('HTTP_REFERER', 'catalogo'))
+
 
 
 def eliminar_del_carrito(request, pid):
@@ -279,37 +299,91 @@ def vaciar_carrito(request):
     return redirect('ver_carrito')
 
 
+
 @login_required
 def finalizar_compra(request):
     carrito = request.session.get('carrito', {})
+
     if not carrito:
         messages.warning(request, 'El carrito está vacío.')
         return redirect('ver_carrito')
 
     if request.method == 'GET':
-        return render(request, 'finalizar_compra.html', {'carrito': carrito})
-    else:
-        total = sum(v['precio'] * v['cantidad'] for v in carrito.values())
-        pedido = Pedido.objects.create(
-            usuario=request.user,
-            total=total,
-            direccion_envio=request.POST.get('direccion', ''),
+        return render(
+            request,
+            'finalizar_compra.html',
+            {'carrito': carrito}
         )
-        # Pasamos cada item de la sesion a lineas de la tabla DetallePedido
-        for pid, item in carrito.items():
-            try:
-                prod = Producto.objects.get(pk=int(pid))
+
+    try:
+        with transaction.atomic():
+            productos_validos = []
+
+            # Verificar nuevamente el stock de cada producto
+            for pid, item in carrito.items():
+                prod = Producto.objects.select_for_update().get(
+                    pk=int(pid),
+                    activo=True
+                )
+
+                cantidad = int(item['cantidad'])
+
+                if cantidad <= 0:
+                    messages.warning(request, 'Cantidad inválida.')
+                    return redirect('ver_carrito')
+
+                if prod.stock < cantidad:
+                    messages.warning(
+                        request,
+                        f'Stock insuficiente para {prod.nombre}. '
+                        f'Disponibles: {prod.stock}.'
+                    )
+                    return redirect('ver_carrito')
+
+                productos_validos.append((prod, cantidad, item))
+
+            # Calcular el total
+            total = sum(
+                item['precio'] * cantidad
+                for prod, cantidad, item in productos_validos
+            )
+
+            # Crear el pedido
+            pedido = Pedido.objects.create(
+                usuario=request.user,
+                total=total,
+                direccion_envio=request.POST.get('direccion', '')
+            )
+
+            # Registrar detalles y descontar inventario
+            for prod, cantidad, item in productos_validos:
                 DetallePedido.objects.create(
                     pedido=pedido,
                     producto=prod,
-                    cantidad=item['cantidad'],
-                    precio_unitario=item['precio'], # precio historico congelado
+                    cantidad=cantidad,
+                    precio_unitario=item['precio']
                 )
-            except Producto.DoesNotExist:
-                pass
+
+                prod.stock -= cantidad
+                prod.save(update_fields=['stock'])
+
+        # Vaciar el carrito después de confirmar la operación
         request.session['carrito'] = {}
-        messages.success(request, f'Pedido #{pedido.id} confirmado con éxito.')
+
+        messages.success(
+            request,
+            f'Pedido #{pedido.id} confirmado con éxito.'
+        )
+
         return redirect('mi_perfil')
+
+    except (Producto.DoesNotExist, ValueError, KeyError):
+        messages.error(
+            request,
+            'No se pudo procesar el pedido. '
+            'Verificá los productos y sus cantidades.'
+        )
+        return redirect('ver_carrito')
 
 
 # --- Consultas y contacto ---
